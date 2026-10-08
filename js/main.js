@@ -41,7 +41,8 @@
       if (open) { const f = umenu.querySelector('.umitem'); if (f) f.focus(); }
     };
     ubtn.addEventListener('click', e => { e.stopPropagation(); if (!document.body.classList.contains('in-exam')) setMenu(umenu.hidden); });
-    document.addEventListener('click', e => { if (!umenu.hidden && !umenu.contains(e.target)) setMenu(false); });
+    // (si el elemento tocado ya no existe, p. ej. un botón de color que se redibujó, no se cierra)
+    document.addEventListener('click', e => { if (!umenu.hidden && e.target.isConnected && !umenu.contains(e.target)) setMenu(false); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !umenu.hidden) { setMenu(false); ubtn.focus(); } });
     umenu.addEventListener('keydown', e => { if (e.key === 'Tab') setMenu(false); });
     // Al cambiar de vista se cierra el menú

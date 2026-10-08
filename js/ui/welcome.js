@@ -80,6 +80,7 @@
             <ol class="wl-steps" aria-label="Las tres etapas">
               <li><b>1</b>Clasificatoria</li><li><b>2</b>Semifinal</li><li><b>3</b>Gran Final</li>
             </ol>
+            <div class="wl-colors"><span id="wlcolorlbl">Elige tu verde favorito:</span><div class="swatches" role="radiogroup" aria-labelledby="wlcolorlbl" data-swatches></div></div>
             <p class="wl-fact"><strong>¿Sabías que…?</strong> ${esc(fact)}</p>
           </div>
         </div>
@@ -101,6 +102,7 @@
         </div>
       </div>`);
 
+    UI.renderSwatches();
     const H = UI.handlers;
     H['wl-enter'] = () => {
       const inp = UI.$('#wlName'), err = UI.$('#wlErr');

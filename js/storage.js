@@ -6,7 +6,7 @@
   'use strict';
   const O = G.OLI;
   const PREFIX = 'jomat2026.';
-  const GLOBAL_KEYS = { profiles: 1, current: 1, admin: 1, adminfail: 1 };
+  const GLOBAL_KEYS = { profiles: 1, current: 1, admin: 1, adminfail: 1, palette: 1 };
   const PROGRESS_KEYS = ['best', 'history', 'active', 'last', 'view', 'sprint', 'lastsprint', 'sprintbest'];
   const mem = {};
   let okCache = null, profileId = null;

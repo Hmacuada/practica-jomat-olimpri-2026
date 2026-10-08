@@ -128,6 +128,27 @@
     const av = UI.$('#uAvatar');
     av.textContent = UI.initial(p.name); av.style.background = UI.avatarColor(p.name);
     UI.$('#uName').textContent = p.name;
+    UI.renderSwatches();
     const n2 = UI.$('#uName2'); if (n2) n2.textContent = p.name;
   };
+
+  /* ---------- Selector de color ---------- */
+  /** Dibuja los botones de color en todos los contenedores [data-swatches] y marca el elegido. */
+  UI.renderSwatches = () => {
+    const cur = O.Theme.current();
+    UI.$$('[data-swatches]').forEach(box => {
+      box.innerHTML = O.Theme.PALETTES.map(p => `<button type="button" class="swatch" role="radio" aria-checked="${p.id === cur}" data-palette-id="${p.id}"
+        aria-label="Verde ${U.esc(p.name)}" title="${U.esc(p.name)}" style="background:${p.swatch};color:${p.light['accent-ink']}"></button>`).join('');
+    });
+  };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-palette-id]');
+    if (!b) return;
+    const bi = UI.$$('[data-swatches]').indexOf(b.closest('[data-swatches]'));
+    const id = O.Theme.set(b.dataset.paletteId);
+    UI.renderSwatches();
+    const box = UI.$$('[data-swatches]')[bi], f = box && box.querySelector(`[data-palette-id="${id}"]`);
+    if (f) f.focus();
+    UI.announce('Color ' + O.Theme.byId(id).name + ' elegido.');
+  });
 })(typeof globalThis !== 'undefined' ? globalThis : window);

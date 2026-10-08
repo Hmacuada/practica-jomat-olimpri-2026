@@ -37,6 +37,7 @@ node tools/serve.js        # abre http://localhost:8080
 ## Usuarios y administración
 
 - **Ingreso por nombre:** la primera vez aparece una portada ilustrada donde el niño escribe su nombre. A partir de ahí la página lo saluda («¡Bienvenido, Tiziano!», «¡Hola de nuevo!…») y guarda su avance, historial y marcas **por usuario**. En un mismo computador pueden practicar varias personas: «Cambiar usuario» muestra la lista. No hay contraseña de usuario, y todo se guarda solo en el navegador.
+- **Colores:** la página es verde y se puede elegir entre cuatro verdes (**Pasto** por defecto, **Bosque**, **Menta** y **Lima**) en la portada o en el menú del usuario. La elección se guarda en el navegador y cada paleta tiene versión clara y oscura (según el sistema). Todas cumplen contraste WCAG para el texto (mínimo 4,5:1). Las paletas están en `js/theme.js`; para agregar una, se suma un objeto a `PALETTES` y el test comprueba sus contrastes.
 - **Opciones de administrador (ocultas):** desbloquear niveles, borrar avance y eliminar usuarios **no aparecen en ninguna parte de la interfaz**. El administrador entra tocando el logo (π) 7 veces seguidas en 4 segundos, o abriendo la dirección con `#admin` al final. La primera vez crea una contraseña (mínimo 6 caracteres); después se la piden en cada acceso. La sesión de administrador se cierra sola a los 10 minutos sin actividad, y tras 5 contraseñas incorrectas seguidas hay que esperar (la espera crece hasta 15 minutos). Dentro hay una lista de usuarios con las acciones por usuario y el cambio de contraseña.
 - **Límites (importante):** al no haber servidor, esto es un candado dentro del navegador. La contraseña se guarda solo como hash SHA-256 repetido con sal (nunca en texto plano ni en el código), así que protege de cambios por accidente o curiosidad, pero **no es seguridad real**: quien sepa programar puede saltárselo desde la consola del navegador. Si se olvida la contraseña, solo se recupera borrando los datos del sitio (lo que también borra el avance). Cada navegador/dispositivo tiene sus propios usuarios y su propia contraseña.
 
@@ -56,6 +57,7 @@ js/util.js           matemática básica, formato es-CL, fracciones, dibujo SVG
 js/engine.js         motor: arma preguntas, planifica simulacros, corrige, niveles
 js/gen/*.js          generadores de preguntas, un archivo por tema
 js/storage.js        localStorage con try/catch y respaldo en memoria; usuarios (perfiles) y avance por usuario
+js/theme.js          paletas de color (4 verdes, claro y oscuro)
 js/admin.js          contraseña de administrador (SHA-256 propio con sal, bloqueo por intentos)
 js/ui/*.js           interfaz: bienvenida, inicio, prueba, resultados, práctica, contra reloj, administración
 js/main.js           arranque (retoma la prueba en curso)
@@ -99,7 +101,8 @@ Reglas útiles: redacta el enunciado en registro formal, como pregunta (`¿Cuál
 node tests/generators.test.js        # 500 preguntas por generador, dificultad y formato
 node tests/generators.test.js 2000   # más exhaustivo
 node tests/users.test.js             # usuarios, avance por usuario y contraseña de administrador
-npm test                             # ambas
+node tests/theme.test.js             # paletas: contraste WCAG y coherencia con el CSS
+npm test                             # todas
 ```
 
 Para cada generador comprueba que la correcta esté entre las alternativas, que haya exactamente una, que no haya alternativas duplicadas, que no aparezcan resultados negativos, fraccionarios o absurdos cuando no corresponde, que no haya textos con `undefined` o `NaN`, que la misma semilla dé la misma pregunta y que casi nunca haga falta reintentar. También revisa el **lenguaje** de cada enunciado: que sea formal (sin imperativos como «Calcula» ni primera persona) y sin errores conocidos de concordancia de género y número. Además arma 360 simulacros completos, verifica los planes de la práctica contra reloj (sin repetir el mismo generador seguidamente, sin problemas de desarrollo, reproducibles), prueba la corrección de puntajes y el lector de respuestas abiertas, y **recalcula de forma independiente** más de 13.000 respuestas a partir del enunciado.
