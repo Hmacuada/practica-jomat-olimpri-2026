@@ -40,16 +40,16 @@
   O.reg({ id: 'fra.falta_numero', topic: T, name: 'Completar fracciones equivalentes', gen(r, d) {
     const [a, b] = coprimePair(r, 2, d === 1 ? 9 : 12), k = r.int(2, 9);
     if (d === 1) return {
-      text: `¿Qué número falta para que se cumpla la igualdad?\n${fr(a, b)} = ${fr('?', b * k)}`, answer: a * k, wrong: [a + k, a * k + b, b * k],
+      text: `¿Qué número falta para que la igualdad sea verdadera?\n${fr(a, b)} = ${fr('?', b * k)}`, answer: a * k, wrong: [a + k, a * k + b, b * k],
       steps: [`De ${b} a ${b * k} se multiplicó por ${k}.`, `Hay que multiplicar el numerador por lo mismo: ${a} × ${k} = ${a * k}.`]
     };
     if (d === 2) return {
-      text: `¿Qué número falta para que se cumpla la igualdad?\n${fr(a, b)} = ${fr(a * k, '?')}`, answer: b * k, wrong: [b + k, a * k + b, b * k + 1],
+      text: `¿Qué número falta para que la igualdad sea verdadera?\n${fr(a, b)} = ${fr(a * k, '?')}`, answer: b * k, wrong: [b + k, a * k + b, b * k + 1],
       steps: [`De ${a} a ${a * k} se multiplicó por ${k}.`, `Hay que multiplicar el denominador por lo mismo: ${b} × ${k} = ${b * k}.`]
     };
     const k1 = r.int(2, 6), k2 = r.int(2, 7);
     return {
-      text: `¿Qué número falta para que se cumpla la igualdad?\n${fr('?', b * k1)} = ${fr(a * k2, b * k2)}`, answer: a * k1, wrong: [a * k2, a * k1 + 1, b * k1, a * k2 / k2 + k1],
+      text: `¿Qué número falta para que la igualdad sea verdadera?\n${fr('?', b * k1)} = ${fr(a * k2, b * k2)}`, answer: a * k1, wrong: [a * k2, a * k1 + 1, b * k1, a * k2 / k2 + k1],
       steps: [`Se simplifica la fracción de la derecha dividiendo por ${k2}: ${fr(a * k2, b * k2)} = ${fr(a, b)}.`, `De ${b} a ${b * k1} se multiplicó por ${k1}, así que el numerador es ${a} × ${k1} = ${a * k1}.`]
     };
   } });
@@ -101,7 +101,7 @@
       if (!add && x.n * y.d <= y.n * x.d) U.fail();
       ans = add ? U.fadd(x, y) : U.fsub(x, y);
       const lc = L(b, dd);
-      text = `Calcula ${fr(a, b)} ${add ? '+' : '−'} ${fr(c, dd)}`;
+      text = `¿Cuál es el resultado de ${fr(a, b)} ${add ? '+' : '−'} ${fr(c, dd)}?`;
       wrong = add ? [F(a + c, b + dd), F(a + c, b), F(a + c, dd)] : [F(a - c, b - dd), F(a - c, b), F(Math.abs(a - c), dd)];
       steps = [`El denominador común es ${lc}.`, `${fr(a, b)} = ${fr(a * lc / b, lc)} y ${fr(c, dd)} = ${fr(c * lc / dd, lc)}.`,
         `${fr(a * lc / b, lc)} ${add ? '+' : '−'} ${fr(c * lc / dd, lc)} = ${simp(add ? a * lc / b + c * lc / dd : a * lc / b - c * lc / dd, lc, ans)}.`];
@@ -112,12 +112,12 @@
       if (op === '−' && x.n * y.d <= y.n * x.d) U.fail();
       const lc = L(b, dd);
       if (op === '×') {
-        ans = U.fmul(x, y); text = `Calcula ${fr(a, b)} × ${fr(c, dd)}`;
+        ans = U.fmul(x, y); text = `¿Cuál es el resultado de ${fr(a, b)} × ${fr(c, dd)}?`;
         wrong = [F(a * c, b + dd), U.fadd(x, y), F(a * dd, b * c), F(a + c, b * dd)];
         steps = [`Se multiplican los numeradores y los denominadores: ${fr(a * c, b * dd)}.`, `Se simplifica: ${U.fmt(ans)}.`];
       } else {
         const add = op === '+';
-        ans = add ? U.fadd(x, y) : U.fsub(x, y); text = `Calcula ${fr(a, b)} ${op} ${fr(c, dd)}`;
+        ans = add ? U.fadd(x, y) : U.fsub(x, y); text = `¿Cuál es el resultado de ${fr(a, b)} ${op} ${fr(c, dd)}?`;
         wrong = add ? [F(a + c, b + dd), F(a + c, lc), F(a + c, b * dd), F(a * c, b * dd)] : [F(a - c, b - dd), F(a - c, lc), F(Math.abs(a - c), b * dd)];
         steps = [`El denominador común (MCM de ${b} y ${dd}) es ${lc}.`, `${fr(a, b)} = ${fr(a * lc / b, lc)} y ${fr(c, dd)} = ${fr(c * lc / dd, lc)}.`,
           `${fr(a * lc / b, lc)} ${op} ${fr(c * lc / dd, lc)} = ${simp(add ? a * lc / b + c * lc / dd : a * lc / b - c * lc / dd, lc, ans)}.`];
@@ -131,20 +131,20 @@
         const s = U.fadd(F(a, b), F(c, dd));
         if (U.fv(s) <= U.fv(F(e, f))) U.fail();
         ans = U.fsub(s, F(e, f));
-        text = `Calcula ${fr(a, b)} + ${fr(c, dd)} − ${fr(e, f)}`;
+        text = `¿Cuál es el resultado de ${fr(a, b)} + ${fr(c, dd)} − ${fr(e, f)}?`;
         wrong = [U.fadd(U.fadd(F(a, b), F(c, dd)), F(e, f)), F(a + c - e, b + dd - f), U.fsub(F(a, b), U.fsub(F(c, dd), F(e, f)))];
         steps = [`Primero ${fr(a, b)} + ${fr(c, dd)} = ${U.fmt(s)}.`, `Luego ${U.fmt(s)} − ${fr(e, f)} = ${U.fmt(ans)}.`];
       } else if (k === 1) {
         const [a, b] = coprimePair(r, 2, 9), [c, dd] = coprimePair(r, 2, 9);
         ans = U.fdiv(F(a, b), F(c, dd));
-        text = `Calcula ${fr(a, b)} ÷ ${fr(c, dd)}`;
+        text = `¿Cuál es el resultado de ${fr(a, b)} ÷ ${fr(c, dd)}?`;
         wrong = [U.fmul(F(a, b), F(c, dd)), F(b * c, a * dd), F(a * dd, b + c), F(a * c, b * dd + 1)];
         steps = [`Dividir por una fracción es multiplicar por su inversa: ${fr(a, b)} × ${fr(dd, c)}.`, `${fr(a * dd, b * c)} = ${U.fmt(ans)}.`];
       } else {
         const [a, b] = coprimePair(r, 2, 9), [c, dd] = coprimePair(r, 2, 9), [e, f] = coprimePair(r, 2, 9);
         const p = U.fmul(F(a, b), F(c, dd));
         ans = U.fadd(p, F(e, f));
-        text = `Calcula ${fr(a, b)} × ${fr(c, dd)} + ${fr(e, f)}`;
+        text = `¿Cuál es el resultado de ${fr(a, b)} × ${fr(c, dd)} + ${fr(e, f)}?`;
         wrong = [U.fmul(U.fadd(F(a, b), F(e, f)), F(c, dd)), U.fadd(U.fadd(F(a, b), F(c, dd)), F(e, f)), F(a * c + e, b * dd + f)];
         steps = [`Primero la multiplicación: ${fr(a, b)} × ${fr(c, dd)} = ${U.fmt(p)}.`, `Luego la suma: ${U.fmt(p)} + ${fr(e, f)} = ${U.fmt(ans)}.`];
       }
@@ -158,12 +158,12 @@
     const mk = (w2, r2) => F(w2 * dn + r2, dn, true);
     const variant = d === 1 ? r.int(0, 1) : d === 2 ? r.pick([0, 1, 2]) : r.pick([2, 3, 4]);
     if (variant === 0) return {
-      text: `Expresa ${fr(n, dn)} como número mixto.`, answer: mk(w, rr),
+      text: `¿Cuál es el resultado al expresar ${fr(n, dn)} como número mixto?`, answer: mk(w, rr),
       wrong: [mk(w + 1, rr), rr + 1 < dn ? mk(w, rr + 1) : mk(w, rr - 1), mk(w - 1, rr), w < dn ? mk(rr, w) : mk(w + 2, rr), mk(w, dn - rr)],
       steps: [`Se divide ${n} ÷ ${dn} = ${w} y sobra ${rr}.`, `El cociente es la parte entera y el resto es el nuevo numerador: ${mix(w, rr, dn)}.`]
     };
     if (variant === 1) return {
-      text: `Expresa ${mix(w, rr, dn)} como fracción impropia.`, answer: F(n, dn),
+      text: `¿Cuál es el resultado al expresar ${mix(w, rr, dn)} como fracción impropia?`, answer: F(n, dn),
       wrong: [F(w + rr, dn), F(w * rr + dn, dn), F(n, rr), F(w * dn, rr)],
       steps: [`Se multiplica la parte entera por el denominador: ${w} × ${dn} = ${w * dn}.`, `Se suma el numerador: ${w * dn} + ${rr} = ${n}.`, `Resultado: ${fr(n, dn)}.`]
     };
@@ -172,7 +172,7 @@
       const x = F(n, dn), y = F(w2 * d2 + r2, d2), s = U.fadd(x, y);
       if (s.d === 1 || s.n < s.d) U.fail();
       return {
-        text: `Calcula ${mix(w, rr, dn)} + ${mix(w2, r2, d2)}. Escribe el resultado como número mixto.`, answer: F(s.n, s.d, true),
+        text: `¿Cuál es el resultado de ${mix(w, rr, dn)} + ${mix(w2, r2, d2)}? Exprese la respuesta como número mixto.`, answer: F(s.n, s.d, true),
         wrong: [F((w + w2) * (dn + d2) + rr + r2, dn + d2, true), F((w + w2) * dn + rr + r2, dn, true), F(s.n + 1, s.d, true), F(s.n - 1, s.d, true), F(s.n, s.d + 1, true)],
         steps: [`Se pasan a fracciones impropias: ${mix(w, rr, dn)} = ${fr(n, dn)} y ${mix(w2, r2, d2)} = ${fr(w2 * d2 + r2, d2)}.`, `Se suman: ${fr(n, dn)} + ${fr(w2 * d2 + r2, d2)} = ${fr(s.n, s.d)}.`, `Se vuelve a número mixto: ${U.fmt(F(s.n, s.d, true))}.`]
       };
@@ -182,7 +182,7 @@
       const x = F(w1 * dn + a1, dn), y = F(w2 * dn + a2, dn), s = U.fsub(x, y);
       if (s.d === 1) U.fail();
       return {
-        text: `Calcula ${mix(w1, a1, dn)} − ${mix(w2, a2, dn)}. Escribe el resultado como número mixto.`, answer: F(s.n, s.d, true),
+        text: `¿Cuál es el resultado de ${mix(w1, a1, dn)} − ${mix(w2, a2, dn)}? Exprese la respuesta como número mixto.`, answer: F(s.n, s.d, true),
         wrong: [F((w1 - w2) * dn + (a2 - a1), dn, true), F(s.n + 1, s.d, true), F(s.n - 1, s.d, true), F((w1 - w2 + 1) * dn + (a2 - a1), dn, true)],
         steps: [`Como ${a1} es menor que ${a2}, conviene pasar a fracciones impropias.`, `${mix(w1, a1, dn)} = ${fr(w1 * dn + a1, dn)} y ${mix(w2, a2, dn)} = ${fr(w2 * dn + a2, dn)}.`, `${fr(w1 * dn + a1, dn)} − ${fr(w2 * dn + a2, dn)} = ${fr(x.n * y.d - y.n * x.d, x.d * y.d)} = ${U.fmt(F(s.n, s.d, true))}.`]
       };
@@ -190,7 +190,7 @@
     const k = r.int(2, 6), p = F(k * n, dn);
     if (p.d === 1) U.fail();
     return {
-      text: `Calcula ${k} × ${mix(w, rr, dn)}. Escribe el resultado como número mixto.`, answer: F(p.n, p.d, true),
+      text: `¿Cuál es el resultado de ${k} × ${mix(w, rr, dn)}? Exprese la respuesta como número mixto.`, answer: F(p.n, p.d, true),
       wrong: [F(k * w * dn + rr, dn, true), F(p.n + 1, p.d, true), F(p.n - 1, p.d, true), F(k * w * dn + k + rr, dn, true)],
       steps: [`${mix(w, rr, dn)} = ${fr(n, dn)}.`, `${k} × ${fr(n, dn)} = ${fr(k * n, dn)}.`, `En número mixto: ${U.fmt(F(p.n, p.d, true))}.`]
     };
@@ -199,7 +199,7 @@
   O.reg({ id: 'fra.de_cantidad', topic: T, name: 'Fracción de una cantidad', dev: true, gen(r, d) {
     const p = U.person(r), money = r.chance(0.6);
     const [a, b] = coprimePair(r, 2, d === 1 ? 6 : 8), [c, dd] = coprimePair(r, 2, 8);
-    const thing = r.pick(['figuritas', 'stickers', 'bolitas', 'cartas']);
+    const thing = r.pick(['figuritas', 'láminas', 'bolitas', 'cartas']);
     const unit = money ? '$' : '';
     const fmt = x => (money ? $(x) : num(x));
     if (d === 1) {
@@ -218,7 +218,7 @@
     if (d === 2) return {
       text: money
         ? `${p.name} tenía ${$(N)}. Gastó ${fr(a, b)} en un libro y ${fr(c, dd)} de lo que le quedó en un helado. ¿Cuánto dinero le queda?`
-        : `${p.name} tenía ${num(N)} ${thing}. Regaló ${fr(a, b)} a su hermano y ${fr(c, dd)} de las que le quedaron a una amiga. ¿Cuántas le quedan?`,
+        : `${p.name} tenía ${num(N)} ${thing}. Regaló ${fr(a, b)} de ellas a su hermano y ${fr(c, dd)} de las que le quedaron a una amiga. ¿Cuántas ${thing} le quedan?`,
       answer: rem2, unit, wrong: [N - gasto1 - N / dd * c, rem1, N - gasto2, gasto1 + gasto2],
       steps: [`Primer gasto: ${fmt(N)} ÷ ${b} × ${a} = ${fmt(gasto1)}. Quedan ${fmt(N)} − ${fmt(gasto1)} = ${fmt(rem1)}.`, `Segundo gasto (de lo que quedó): ${fmt(rem1)} ÷ ${dd} × ${c} = ${fmt(gasto2)}.`, `Quedan ${fmt(rem1)} − ${fmt(gasto2)} = ${fmt(rem2)}.`]
     };
@@ -226,7 +226,7 @@
     return {
       text: money
         ? `${p.name} tenía ${$(N)}. Gastó ${fr(a, b)} en un libro, luego ${fr(c, dd)} de lo que le quedaba en un helado y finalmente la mitad de lo que le quedó en el transporte. ¿Cuánto dinero le queda?`
-        : `${p.name} tenía ${num(N)} ${thing}. Regaló ${fr(a, b)} a su hermano, luego ${fr(c, dd)} de las que le quedaban a una amiga y finalmente la mitad de las que le quedaron a un primo. ¿Cuántas le quedan?`,
+        : `${p.name} tenía ${num(N)} ${thing}. Regaló ${fr(a, b)} de ellas a su hermano, luego ${fr(c, dd)} de las que le quedaban a una amiga y finalmente la mitad de las que le quedaron a un primo. ¿Cuántas ${thing} le quedan?`,
       answer: rem3, unit, wrong: [rem2, half, rem2 - N / 2, N - gasto1 - gasto2 - N / 2],
       steps: [`Tras el primer gasto: ${fmt(N)} − ${fmt(gasto1)} = ${fmt(rem1)}.`, `Tras el segundo: ${fmt(rem1)} − ${fmt(gasto2)} = ${fmt(rem2)}.`, `La mitad de ${fmt(rem2)} es ${fmt(half)}, así que quedan ${fmt(rem2)} − ${fmt(half)} = ${fmt(rem3)}.`]
     };

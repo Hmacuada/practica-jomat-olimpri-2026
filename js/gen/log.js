@@ -8,7 +8,7 @@
     if (d === 1) {
       const b = r.int(5, 20), diff = r.int(2, 12), a = b + diff, S = a + b;
       return {
-        text: `${p1.name} y ${p2.name} tienen entre los dos ${S} años. ${p1.name} tiene ${diff} años más que ${p2.name}. ¿Cuántos años tiene ${p1.name}?`, answer: a, unit: 'años',
+        text: `La suma de las edades de ${p1.name} y ${p2.name} es ${S} años. ${p1.name} tiene ${diff} años más que ${p2.name}. ¿Cuántos años tiene ${p1.name}?`, answer: a, unit: 'años',
         wrong: [S / 2, b, S - diff, diff, a + 1, a - 1],
         steps: [`Si ${p1.name} tuviera la edad de ${p2.name}, la suma sería ${S} − ${diff} = ${S - diff}.`, `Entonces ${p2.name} tiene ${S - diff} ÷ 2 = ${b} años.`, `${p1.name} tiene ${b} + ${diff} = ${a} años.`]
       };
@@ -17,7 +17,7 @@
       if (r.chance(0.5)) {
         const k = r.pick([2, 3, 4, 5]), x = r.int(4, 14), S = (k + 1) * x;
         return {
-          text: `Hoy ${p1.name} tiene ${k === 2 ? 'el doble' : k === 3 ? 'el triple' : `${k} veces`} de la edad de ${p2.name}. Entre los dos suman ${S} años. ¿Cuántos años tiene ${p1.name}?`, answer: k * x, unit: 'años',
+          text: `Hoy ${p1.name} tiene ${k === 2 ? 'el doble de' : k === 3 ? 'el triple de' : `${k} veces`} la edad de ${p2.name}. La suma de sus edades es ${S} años. ¿Cuántos años tiene ${p1.name}?`, answer: k * x, unit: 'años',
           wrong: [x, S / k | 0, S - k, S / 2, k * x + x],
           steps: [`Si ${p2.name} tiene 1 parte, ${p1.name} tiene ${k} partes: en total ${k + 1} partes.`, `Cada parte vale ${S} ÷ ${k + 1} = ${x}.`, `${p1.name} tiene ${k} × ${x} = ${k * x} años.`]
         };
@@ -33,7 +33,7 @@
       const x = r.int(3, 12), k = r.pick([2, 3, 4]), t = r.int(1, 15), y = k * (x + t) - t;
       if (y > 70 || y <= x + 20) continue;
       return {
-        text: `Hoy ${p1.name} tiene ${y} años y su hijo tiene ${x} años. ¿Dentro de cuántos años la edad de ${p1.name} será ${k === 2 ? 'el doble' : k === 3 ? 'el triple' : `${k} veces`} la edad de su hijo?`, answer: t, unit: 'años',
+        text: `Hoy ${p1.name} tiene ${y} años y su hijo tiene ${x} años. ¿Dentro de cuántos años la edad de ${p1.name} será ${k === 2 ? 'el doble de' : k === 3 ? 'el triple de' : `${k} veces`} la edad de su hijo?`, answer: t, unit: 'años',
         wrong: [y - k * x, y - x, t + 1, t - 1 > 0 ? t - 1 : t + 2, (y + x) / k | 0],
         steps: [`Dentro de t años: ${y} + t = ${k} × (${x} + t).`, `${y} + t = ${k * x} + ${k}t → ${y - k * x} = ${k - 1}t.`, `t = ${y - k * x} ÷ ${k - 1} = ${t} años.`, `Comprobación: ${y + t} años y ${x + t} años: ${y + t} = ${k} × ${x + t}.`]
       };
@@ -57,18 +57,19 @@
         ops.push({ k, a });
       }
       if (!ok || v > 500 || v === s) continue;
-      const ph = { mul: o => `lo multiplico por ${o.a}`, add: o => `le sumo ${o.a}`, sub: o => `le resto ${o.a}`, div: o => `lo divido por ${o.a}` };
-      const story = ops.map(o => ph[o.k](o)).join(', luego ').replace(/, luego ([^,]+)$/, ' y luego $1');
+      const ph = { mul: o => `se multiplica por ${o.a}`, add: o => `se le suma ${o.a}`, sub: o => `se le resta ${o.a}`, div: o => `se divide por ${o.a}` };
+      const parts = ops.map(o => ph[o.k](o));
+      const story = parts.length === 2 ? `${parts[0]} y luego ${parts[1]}` : `${parts[0]}, luego ${parts.slice(1, -1).join(', luego ')} y finalmente ${parts[parts.length - 1]}`;
       const inv = { mul: (x, a) => x / a, add: (x, a) => x - a, sub: (x, a) => x + a, div: (x, a) => x * a };
       let naive = v; ops.forEach(o => { naive = inv[o.k](naive, o.a); });
       const steps = []; let cur = v;
       for (let i = ops.length - 1; i >= 0; i--) {
         const o = ops[i], nx = inv[o.k](cur, o.a), sym = { mul: '÷', add: '−', sub: '+', div: '×' }[o.k];
-        steps.push(`Deshacer "${ph[o.k](o)}": ${cur} ${sym} ${o.a} = ${nx}.`); cur = nx;
+        steps.push(`Se deshace «${ph[o.k](o)}»: ${cur} ${sym} ${o.a} = ${nx}.`); cur = nx;
       }
       steps.push(`El número que pensé es ${s}.`);
       return {
-        text: `Pienso un número. ${story[0].toUpperCase() + story.slice(1)} y obtengo ${v}. ¿Qué número pensé?`, answer: s,
+        text: `A un número se le realizan las siguientes operaciones: primero ${story}. El resultado final es ${v}. ¿Cuál es el número inicial?`, answer: s,
         wrong: [naive, s + 1, s - 1, v - ops.filter(o => o.k === 'add').reduce((x, o) => x + o.a, 0), v / ops[0].a],
         steps: ['Se trabaja hacia atrás: se deshacen las operaciones en orden inverso, con la operación contraria.'].concat(steps)
       };
@@ -81,7 +82,7 @@
     if (d === 1) {
       const a = r.int(2, 5), b = r.int(2, 5), c = r.int(2, 4);
       return {
-        text: `${p.name} tiene ${a} poleras, ${b} pantalones y ${c} pares de zapatillas. ¿De cuántas formas distintas puede vestirse eligiendo una prenda de cada tipo?`, answer: a * b * c,
+        text: `${p.name} tiene ${a} poleras, ${b} pantalones y ${c} pares de zapatillas. ¿De cuántas formas distintas puede vestirse si elige una prenda de cada tipo?`, answer: a * b * c,
         wrong: [a + b + c, a * b, a * b + c, a * b * c + a, (a + b) * c],
         steps: [`Por cada polera hay ${b} pantalones, y por cada una de esas combinaciones hay ${c} zapatillas.`, `${a} × ${b} × ${c} = ${a * b * c} formas.`]
       };
@@ -163,7 +164,7 @@
     }
     const others = [0, 1, 2].filter(j => j !== tc).map(j => g[tr][j]), x = g[tr][tc];
     return {
-      text: `En este cuadro mágico, todas las filas, columnas y diagonales suman lo mismo. ¿Qué número va en la casilla marcada con ?`,
+      text: `En el cuadro mágico de la figura, la suma de los números de cada fila, de cada columna y de cada diagonal es la misma. ¿Qué número debe ir en la casilla marcada con «?»?`,
       svg: magicSvg(g, shown, [tr, tc]), answer: x,
       wrong: [S - others[0], others[0] + others[1], S - others[1], x + sc, x - sc, center],
       steps: help.concat([`La fila de la casilla marcada tiene ${others.join(' y ')} más el número que falta: ${others.join(' + ')} + ? = ${S}.`, `? = ${S} − ${others[0] + others[1]} = ${x}.`])
@@ -177,7 +178,7 @@
       if (h === k) U.fail();
       const askK = r.chance(0.5);
       return {
-        text: `En un corral hay gallinas y conejos. En total se cuentan ${N} cabezas y ${P} patas. ¿Cuántos ${askK ? 'conejos' : 'gallinas'} hay?`, answer: askK ? k : h,
+        text: `En un corral hay gallinas y conejos. En total se cuentan ${N} cabezas y ${P} patas. ${askK ? '¿Cuántos conejos hay?' : '¿Cuántas gallinas hay?'}`, answer: askK ? k : h,
         wrong: askK ? [h, N / 2 | 0, P / 4 | 0, k + 1, k - 1] : [k, N / 2 | 0, P / 2 | 0, h + 1, h - 1],
         steps: [`Si los ${N} animales fueran gallinas, habría ${N} × 2 = ${2 * N} patas.`, `Sobran ${P} − ${2 * N} = ${P - 2 * N} patas; cada conejo tiene 2 patas más que una gallina.`, `Conejos: ${P - 2 * N} ÷ 2 = ${k}. Gallinas: ${N} − ${k} = ${h}.`]
       };
@@ -213,7 +214,7 @@
     else { question = '¿Quién tiene la estatura del medio, con dos personas más altas y dos más bajas que ella?'; ans = order[2]; how = 'el que ocupa el medio'; }
     let opts = k === 4 ? ps : [ans, ...r.shuffle(ps.filter(x => x !== ans)).slice(0, 3)];
     return {
-      text: `${k === 4 ? 'Cuatro' : 'Cinco'} amigos comparan sus estaturas. ${shuffled.join('. ')}. ${question}`, answer: ans, wrong: opts.filter(x => x !== ans),
+      text: `${k === 4 ? 'Cuatro' : 'Cinco'} amigos comparan sus estaturas y se sabe lo siguiente:\n${shuffled.map(c => '• ' + c + '.').join('\n')}\n${question}`, answer: ans, wrong: opts.filter(x => x !== ans),
       steps: [`Se ordenan las pistas encadenándolas: ${order.join(' > ')} (de más alto a más bajo).`, `La respuesta es ${how}: ${ans}.`]
     };
   } });

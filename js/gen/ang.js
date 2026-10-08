@@ -37,7 +37,7 @@
       if (th % 5 !== 0 && r.chance(0.5)) U.fail();
       const tot = comp ? 90 : 180, ans = tot - th;
       return {
-        text: `En la figura, los dos ángulos ${comp ? 'forman un ángulo recto (90°)' : 'están sobre una recta y suman 180°'}. Uno mide ${deg(th)}. ¿Cuánto mide el ángulo marcado con x?`,
+        text: `En la figura, los dos ángulos ${comp ? 'forman en conjunto un ángulo recto (90°)' : 'están sobre una recta y suman 180°'}. Uno de ellos mide ${deg(th)}. ¿Cuánto mide el ángulo marcado con x?`,
         svg: angleSvg(th, comp ? 'comp' : 'sup', deg(th), 'x'), answer: ans, unit: '°',
         wrong: [comp ? 180 - th : 90 - th > 0 ? 90 - th : th, th, tot + th > 0 ? 360 - th : th, ans + 10, ans - 10 > 0 ? ans - 10 : ans + 5],
         steps: [`Los dos ángulos suman ${tot}°.`, `x = ${tot}° − ${th}° = ${ans}°.`]
@@ -54,7 +54,7 @@
     }
     const comp = r.chance(0.5), m = comp ? r.pick([2, 5, 8]) : r.pick([2, 3, 4, 5, 8, 11]), tot = comp ? 90 : 180, ans = tot / (m + 1);
     return {
-      text: `El ${comp ? 'complemento' : 'suplemento'} de un ángulo mide ${m === 2 ? 'el doble' : m === 3 ? 'el triple' : `${m} veces`} de lo que mide el ángulo. ¿Cuánto mide el ángulo?`, answer: ans, unit: '°',
+      text: `La medida del ${comp ? 'complemento' : 'suplemento'} de un ángulo es ${m === 2 ? 'el doble de' : m === 3 ? 'el triple de' : `${m} veces`} la medida de ese ángulo. ¿Cuánto mide el ángulo?`, answer: ans, unit: '°',
       wrong: [ans * m, tot / m, tot / 2, ans + 10, tot - ans - ans],
       steps: [`Si el ángulo es x, su ${comp ? 'complemento' : 'suplemento'} es ${m}x.`, `x + ${m}x = ${tot}°, es decir ${m + 1}x = ${tot}°.`, `x = ${tot} ÷ ${m + 1} = ${ans}°.`]
     };
@@ -78,7 +78,7 @@
       if (r.chance(0.5)) {
         const apex = r.step(20, 120, 2), b = (180 - apex) / 2;
         return {
-          text: `Un triángulo isósceles tiene un ángulo desigual (el del vértice superior) de ${deg(apex)}. ¿Cuánto mide cada uno de los ángulos iguales de la base?`,
+          text: `En un triángulo isósceles, el ángulo desigual (el del vértice superior) mide ${deg(apex)}. ¿Cuánto mide cada uno de los ángulos iguales de la base?`,
           svg: U.svgTri(b, b, 'x', 'x', deg(apex)), answer: b, unit: '°',
           wrong: [180 - apex, apex, 90 - apex, b + 10, (180 - apex) / 3 | 0],
           steps: [`Los tres ángulos suman 180°: queda 180° − ${apex}° = ${180 - apex}° para los dos de la base.`, `Como son iguales, cada uno mide ${180 - apex} ÷ 2 = ${b}°.`]
@@ -95,7 +95,7 @@
       const A = r.int(30, 80), B = r.int(30, 80);
       if (A + B >= 150) U.fail();
       return {
-        text: `En un triángulo, dos ángulos interiores miden ${deg(A)} y ${deg(B)}. ¿Cuánto mide el ángulo exterior que se forma en el tercer vértice (el que está al lado del ángulo interior que falta)?`, answer: A + B, unit: '°',
+        text: `En un triángulo, dos ángulos interiores miden ${deg(A)} y ${deg(B)}. ¿Cuánto mide el ángulo exterior correspondiente al tercer vértice (adyacente al ángulo interior desconocido)?`, answer: A + B, unit: '°',
         wrong: [180 - A - B, 180 - A, A + B + 10, 360 - A - B, 180 + A + B - 180 + 5],
         steps: [`El tercer ángulo interior mide 180° − ${A}° − ${B}° = ${180 - A - B}°.`, `El ángulo exterior y el interior suman 180°: 180° − ${180 - A - B}° = ${A + B}°.`, `(El exterior es igual a la suma de los dos interiores opuestos: ${A}° + ${B}°.)`]
       };
@@ -123,7 +123,7 @@
       const th = r.step(40, 80, 5);
       const kind = r.pick(['consec', 'opuesto', 'suma']);
       if (kind === 'consec') return {
-        text: `Un paralelogramo tiene un ángulo de ${deg(th)}. ¿Cuánto mide uno de los ángulos consecutivos a él?`, answer: 180 - th, unit: '°',
+        text: `Un paralelogramo tiene un ángulo de ${deg(th)}. ¿Cuánto mide cada ángulo consecutivo a ese ángulo?`, answer: 180 - th, unit: '°',
         wrong: [th, 360 - th, 90 - th, 180 - th + 10, 360 - 2 * th],
         steps: [`En un paralelogramo los ángulos consecutivos suman 180°.`, `180° − ${th}° = ${180 - th}°.`]
       };
@@ -149,7 +149,7 @@
     }
     const th = r.step(55, 80, 5);
     return {
-      text: `Un trapecio isósceles tiene los dos ángulos de su base mayor de ${deg(th)}. ¿Cuánto mide cada ángulo de la base menor?`, answer: 180 - th, unit: '°',
+      text: `En un trapecio isósceles, los dos ángulos de la base mayor miden ${deg(th)} cada uno. ¿Cuánto mide cada ángulo de la base menor?`, answer: 180 - th, unit: '°',
       wrong: [th, 360 - 2 * th, 90 + th, 180 - th + 5, 90 - th],
       steps: [`Los ángulos que están sobre un mismo lado inclinado suman 180° (lados paralelos).`, `Cada ángulo de la base menor mide 180° − ${th}° = ${180 - th}°.`]
     };
@@ -168,7 +168,7 @@
       const names = d === 1 ? ['Cuadrado', 'Rectángulo', 'Rombo', 'Trapecio'] : Object.keys(QUAD);
       const target = r.pick(names), others = r.shuffle(Object.keys(QUAD).filter(n => n !== target)).slice(0, 3);
       return {
-        text: `Soy un cuadrilátero y ${QUAD[target]} ¿Qué figura soy?`, answer: target, wrong: others,
+        text: `Un cuadrilátero ${QUAD[target]} ¿Cómo se llama este cuadrilátero?`, answer: target, wrong: others,
         steps: [`Las pistas coinciden con el ${target.toLowerCase()}: ${QUAD[target].replace(/\.$/, '')}.`, `Los otros se descartan: ${others.map(o => `el ${o.toLowerCase()} ${QUAD[o].replace(/\.$/, '')}`).join('; ')}.`]
       };
     }
@@ -187,7 +187,7 @@
     else ans = 'Escaleno';
     const opts = ['Equilátero', 'Isósceles', 'Escaleno', 'No se puede formar un triángulo'];
     return {
-      text: `Un triángulo tiene lados de ${r.shuffle([a, b, c]).join(' cm, ').replace(/, (\d+)$/, ' cm y $1')} cm. ¿Cómo se clasifica según sus lados?`,
+      text: `Se dispone de tres segmentos que miden ${r.shuffle([a, b, c]).map(x => x + ' cm').join(', ').replace(/, ([^,]+)$/, ' y $1')}. Con ellos se intenta construir un triángulo. ¿Cuál de las siguientes opciones describe correctamente el resultado?`,
       answer: ans, wrong: opts.filter(o => o !== ans),
       steps: ok
         ? [`Se comparan los lados ${sides.join(', ')}: ${ans === 'Equilátero' ? 'los tres son iguales' : ans === 'Isósceles' ? 'hay dos iguales' : 'los tres son distintos'}.`, `Es ${ans.toLowerCase()}.`]
@@ -211,7 +211,7 @@
     }
     if (bad.length < 3) U.fail();
     return {
-      text: `Se tienen varillas de distintos largos. ¿Con cuál de los siguientes grupos de tres varillas se puede formar un triángulo?`,
+      text: `Se dispone de varillas de distintos largos. ¿Con cuál de los siguientes grupos de tres varillas es posible construir un triángulo?`,
       answer: fmt(good), wrong: bad.map(fmt),
       steps: [`En un triángulo, la suma de los dos lados menores debe ser mayor que el lado mayor.`, ...[good, ...bad].map(t => { const s = t.slice().sort((x, y) => x - y); return `${fmt(t)}: ${s[0]} + ${s[1]} = ${s[0] + s[1]} ${s[0] + s[1] > s[2] ? 'es mayor que' : s[0] + s[1] === s[2] ? 'es igual a' : 'es menor que'} ${s[2]} → ${s[0] + s[1] > s[2] ? 'sí se puede' : 'no se puede'}.`; })]
     };
@@ -237,7 +237,7 @@
       if (r.chance(0.5)) {
         const m = r.step(5, 55, 5);
         return {
-          text: `El minutero de un reloj gira durante ${m} minutos. ¿Cuántos grados recorre?`, answer: m * 6, unit: '°',
+          text: `El minutero de un reloj gira durante ${m} minutos. ¿Cuántos grados recorre en ese tiempo?`, answer: m * 6, unit: '°',
           wrong: [m * 30, m * 12, m * 60 / 10 + 6, m * 6 + 30, m * 3],
           steps: [`En 60 minutos el minutero da una vuelta completa: 360°.`, `En 1 minuto recorre 360° ÷ 60 = 6°.`, `En ${m} minutos: ${m} × 6° = ${m * 6}°.`]
         };
@@ -255,7 +255,7 @@
     ang = R(ang);
     const time = `${h}:${String(m).padStart(2, '0')}`;
     return {
-      text: `¿Qué ángulo menor forman las manecillas de un reloj a las ${time}?`, svg: clockSvg(h, m), answer: ang, unit: '°',
+      text: `¿Cuál es la medida del menor ángulo que forman las manecillas de un reloj a las ${time}?`, svg: clockSvg(h, m), answer: ang, unit: '°',
       wrong: [R(Math.abs(30 * h - 6 * m) > 180 ? 360 - Math.abs(30 * h - 6 * m) : Math.abs(30 * h - 6 * m)), R(360 - ang), R(30 * h > 180 ? 360 - 30 * h : 30 * h), R(ang + 15), R(ang + 30), R(Math.abs(ang - 30))],
       steps: [`En 1 hora la manecilla de las horas gira 30°, así que a las ${time} marca ${num(30 * h)}° + ${num(R(0.5 * m))}° = ${num(R(30 * h + 0.5 * m))}° (cada minuto avanza 0,5°).`,
         `El minutero marca ${m} × 6° = ${m * 6}°.`, `La diferencia es |${num(R(30 * h + 0.5 * m))} − ${m * 6}| = ${num(R(Math.abs(30 * h + 0.5 * m - 6 * m)))}°${Math.abs(30 * h + 0.5 * m - 6 * m) > 180 ? `; el ángulo menor es 360° − ese valor = ${num(ang)}°` : ''}.`]
@@ -280,7 +280,7 @@
     if (variant === 'iso') {
       const k = r.pick([2, 3, 4, 7, 10]), b = 180 / (k + 2);
       return {
-        text: `En un triángulo isósceles, el ángulo desigual mide ${k === 2 ? 'el doble' : k === 3 ? 'el triple' : `${k} veces`} de lo que mide cada uno de los ángulos iguales. ¿Cuánto mide el ángulo desigual?`,
+        text: `En un triángulo isósceles, la medida del ángulo desigual es ${k === 2 ? 'el doble de' : k === 3 ? 'el triple de' : `${k} veces`} la medida de cada uno de los ángulos iguales. ¿Cuánto mide el ángulo desigual?`,
         answer: k * b, unit: '°', wrong: [b, 180 - b, 180 - 2 * b, k * b + b, 180 / k],
         steps: [`Si cada ángulo igual mide x, el desigual mide ${k}x.`, `x + x + ${k}x = 180°, es decir ${k + 2}x = 180° → x = ${b}°.`, `El ángulo desigual mide ${k} × ${b}° = ${k * b}°.`]
       };

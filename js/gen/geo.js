@@ -72,7 +72,7 @@
       if (w === h) U.fail();
       const P = 2 * (w + h), A = w * h;
       return {
-        text: `Un rectángulo tiene perímetro ${P} ${u} y uno de sus lados mide ${w} ${u}. ¿Cuál es su área?`,
+        text: `El perímetro de un rectángulo es ${P} ${u} y uno de sus lados mide ${w} ${u}. ¿Cuál es el área del rectángulo?`,
         svg: rectSvg(w, h, `${w} ${u}`, '?'), answer: A, unit: u + '²',
         wrong: [P * w, w * (P / 2), h, P, A + w, (P - w) * w],
         steps: [`La suma de largo y ancho es la mitad del perímetro: ${P} ÷ 2 = ${P / 2} ${u}.`, `El otro lado mide ${P / 2} − ${w} = ${h} ${u}.`, `Área = ${w} × ${h} = ${A} ${u}².`]
@@ -89,7 +89,7 @@
     const w = r.int(6, 24), h = r.int(3, 16);
     if (w === h) U.fail();
     return {
-      text: `Un rectángulo tiene un área de ${w * h} ${u}² y uno de sus lados mide ${w} ${u}. ¿Cuál es su perímetro?`, svg: rectSvg(w, h, `${w} ${u}`, '?'),
+      text: `El área de un rectángulo es ${w * h} ${u}² y uno de sus lados mide ${w} ${u}. ¿Cuál es el perímetro del rectángulo?`, svg: rectSvg(w, h, `${w} ${u}`, '?'),
       answer: 2 * (w + h), unit: u,
       wrong: [w * h, w + h, 2 * w + h, 2 * w * h, 2 * (w + h) + 2],
       steps: [`El otro lado mide ${w * h} ÷ ${w} = ${h} ${u}.`, `Perímetro = 2 × (${w} + ${h}) = ${2 * (w + h)} ${u}.`]
@@ -101,7 +101,7 @@
     const A = W * H - w * h, P = 2 * (W + H);
     const askP = d === 3 && r.chance(0.5);
     return {
-      text: `La figura está formada quitando un rectángulo de una esquina de un rectángulo más grande. Observa las medidas. ¿Cuál es ${askP ? 'su perímetro' : 'su área'}?`,
+      text: `La figura se forma al quitar un rectángulo de una esquina de un rectángulo mayor. Considere las medidas indicadas. ¿Cuál es ${askP ? 'el perímetro' : 'el área'} de la figura?`,
       svg: lShapeSvg(W, H, w, h), answer: askP ? P : A, unit: askP ? 'cm' : 'cm²',
       wrong: askP ? [P + 2 * (w + h), W + H + w + h, W * H, P - 2 * w, P + w + h] : [W * H, W * H + w * h, (W - w) * H, W * H - w, (W - w) * (H - h)],
       steps: askP
@@ -120,7 +120,7 @@
     if (d < 3) {
       const area = kind === 'tri' ? b * h / 2 : b * h;
       return {
-        text: `Observa ${kind === 'tri' ? 'el triángulo' : 'el paralelogramo'}. La línea punteada es la altura. ¿Cuál es su área?`, svg, answer: area, unit: 'cm²',
+        text: `En ${kind === 'tri' ? 'el triángulo' : 'el paralelogramo'} de la figura, la línea punteada corresponde a la altura. ¿Cuál es su área?`, svg, answer: area, unit: 'cm²',
         wrong: kind === 'tri' ? [b * h, b * slant / 2, (b + h) / 2 * 2, b * slant, area + b] : [b * slant, b * h / 2, 2 * (b + slant), area + b],
         steps: kind === 'tri'
           ? [`Se usan la base y la altura (la altura es la línea punteada, no el lado inclinado).`, `Área = base × altura ÷ 2 = ${b} × ${h} ÷ 2 = ${area} cm².`]
@@ -165,7 +165,7 @@
     if (r.chance(0.5)) {
       const l = r.pick([20, 30, 40, 50, 60, 80, 100]), a = r.pick([20, 30, 40, 50, 60]), h = r.pick([20, 30, 40, 50, 60]), V = l * a * h;
       return {
-        text: `Una pecera con forma de prisma mide ${l} cm de largo, ${a} cm de ancho y ${h} cm de alto. ¿Cuántos litros de agua caben si se llena por completo? (1 litro = 1.000 cm³)`, svg: prismSvg(l, a, h),
+        text: `Una pecera con forma de prisma mide ${l} cm de largo, ${a} cm de ancho y ${h} cm de alto. ¿Cuántos litros de agua caben en la pecera cuando está completamente llena? (1 litro = 1.000 cm³)`, svg: prismSvg(l, a, h),
         answer: V / 1000, unit: 'L', wrong: [V, V / 100, V / 10000, (l + a + h) / 10, V / 1000 + 10],
         steps: [`Volumen = ${l} × ${a} × ${h} = ${num(V)} cm³.`, `Como 1 litro son 1.000 cm³: ${num(V)} ÷ 1.000 = ${num(V / 1000)} litros.`]
       };

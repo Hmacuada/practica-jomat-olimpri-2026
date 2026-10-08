@@ -23,22 +23,22 @@
     let body = '';
     if (q.type === 'mc') {
       const mine = typeof a === 'number' ? `${O.LETTERS[a]}) ${rich(q.options[a])}` : '<em>Sin responder</em>';
-      body = `<div class="answers"><div class="row"><span class="k">Tu respuesta</span><span class="v ${per.state === 'ok' ? 'ok' : per.state === 'bad' ? 'bad' : ''}">${mine}</span></div>
+      body = `<div class="answers"><div class="row"><span class="k">Respuesta entregada</span><span class="v ${per.state === 'ok' ? 'ok' : per.state === 'bad' ? 'bad' : ''}">${mine}</span></div>
         <div class="row"><span class="k">Respuesta correcta</span><span class="v ok">${O.LETTERS[q.correct]}) ${rich(q.options[q.correct])}</span></div></div>`;
     } else if (q.type === 'open') {
       const has = a !== undefined && String(a).trim() !== '';
-      body = `<div class="answers"><div class="row"><span class="k">Tu respuesta</span><span class="v ${per.state === 'ok' ? 'ok' : per.state === 'bad' ? 'bad' : ''}">${has ? esc(a) : '<em>Sin responder</em>'}</span></div>
+      body = `<div class="answers"><div class="row"><span class="k">Respuesta entregada</span><span class="v ${per.state === 'ok' ? 'ok' : per.state === 'bad' ? 'bad' : ''}">${has ? esc(a) : '<em>Sin responder</em>'}</span></div>
         <div class="row"><span class="k">Respuesta correcta</span><span class="v ok">${rich(q.display)}</span></div></div>`;
     } else {
       const v = a || { t: '', f: '' }, hasF = (v.f || '').trim() !== '';
       const match = hasF ? O.checkOpen(q, v.f) : null;
       const cur = last.selfEval[q.i];
-      body = `<div class="answers"><div class="row"><span class="k">Tu procedimiento</span></div>
+      body = `<div class="answers"><div class="row"><span class="k">Procedimiento escrito</span></div>
         <div class="userbox">${(v.t || '').trim() ? esc(v.t) : '<em>No escribiste nada</em>'}</div>
-        ${hasF ? `<div class="row"><span class="k">Tu respuesta final</span><span class="v ${match ? 'ok' : 'bad'}">${esc(v.f)} ${match ? '✔ coincide con la solución' : '✘ no coincide con la solución'}</span></div>` : ''}
+        ${hasF ? `<div class="row"><span class="k">Respuesta final escrita</span><span class="v ${match ? 'ok' : 'bad'}">${esc(v.f)} ${match ? '✔ coincide con la solución' : '✘ no coincide con la solución'}</span></div>` : ''}
         <div class="row"><span class="k">Respuesta correcta</span><span class="v ok">${rich(q.display)}</span></div></div>`;
       body += `<div class="selfeval" role="group" aria-label="Autoevaluación de la pregunta ${q.i + 1}">
-        <p>Compara tu procedimiento con la solución y elige cómo te fue:</p>
+        <p>Compare el procedimiento escrito con la solución y seleccione el resultado de la autoevaluación:</p>
         <div class="btn-row">${[[1, 'Lo logré'], [0.5, 'Casi'], [0, 'No lo logré']].map(([v2, t]) =>
           `<button type="button" class="btn small" data-act="eval" data-i="${q.i}" data-v="${v2}" aria-pressed="${cur === v2}">${t}</button>`).join('')}</div></div>`;
     }
@@ -47,7 +47,7 @@
       <div class="qtext" style="font-size:1.08rem">${rich(q.text)}</div>
       ${q.svg ? `<div class="qfig">${q.svg}</div>` : ''}
       ${body}
-      <details${q.type === 'dev' ? ' open' : ''}><summary style="cursor:pointer;font-weight:700;min-height:36px">Cómo se resuelve</summary>
+      <details${q.type === 'dev' ? ' open' : ''}><summary style="cursor:pointer;font-weight:700;min-height:36px">Resolución paso a paso</summary>
         <ol class="steps">${q.steps.map(s => `<li>${rich(s)}</li>`).join('')}</ol></details>
     </article>`;
   }

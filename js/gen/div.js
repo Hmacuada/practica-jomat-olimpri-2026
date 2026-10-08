@@ -31,7 +31,7 @@
     let extra = '';
     if (k === 3 || k === 9) extra = ` Por ejemplo, ${num(m)}: ${String(m).split('').join(' + ')} = ${digitSum(m)}.`;
     return {
-      text: `¿Cuál de estos números es divisible por ${k}?`, answer: m, wrong,
+      text: `¿Cuál de los siguientes números es divisible por ${k}?`, answer: m, wrong,
       steps: [CRITERIA[k], `El único que cumple es ${num(m)}.${extra}`]
     };
   } });
@@ -43,7 +43,7 @@
       const cnt = Math.floor(N / k) - Math.ceil(A / k) + 1;
       if (cnt < 4) U.fail();
       return {
-        text: `¿Cuántos múltiplos de ${k} hay entre ${A} y ${N}, contando ${A === 1 ? 'el 1 y ' : ''}los extremos si corresponde?`,
+        text: `¿Cuántos números del ${A} al ${N} (ambos incluidos) son múltiplos de ${k}?`,
         answer: cnt, wrong: [cnt + 1, cnt - 1, Math.floor((N - A) / k), Math.floor(N / k)],
         steps: [`El primer múltiplo de ${k} desde ${A} es ${Math.ceil(A / k) * k} (${Math.ceil(A / k)} × ${k}).`,
           `El último múltiplo hasta ${N} es ${Math.floor(N / k) * k} (${Math.floor(N / k)} × ${k}).`,
@@ -54,7 +54,7 @@
     const L = U.lcm(a, b), N = r.int(200, 1000), c = Math.floor(N / L);
     if (c < 3) U.fail();
     return {
-      text: `¿Cuántos números del 1 al ${N} son múltiplos de ${a} y de ${b} a la vez?`,
+      text: `¿Cuántos números del 1 al ${N} (ambos incluidos) son múltiplos de ${a} y de ${b} simultáneamente?`,
       answer: c, wrong: [Math.floor(N / a) + Math.floor(N / b), c + 1, c - 1, Math.floor(N / (a * b))],
       steps: [`Los números que son múltiplos de ${a} y de ${b} son los múltiplos de su MCM.`, `MCM(${a}, ${b}) = ${L}.`, `${N} ÷ ${L} = ${(N / L).toFixed(2).replace('.', ',')} → hay ${c} múltiplos de ${L} hasta ${N}.`]
     };
@@ -67,7 +67,7 @@
     const steps = [`Los divisores de ${n} son: ${ds.join(', ')}.`, `En total son ${t} divisores.`];
     if (d === 3) steps.push(`También se puede calcular: ${n} = ${U.factStr(n)}; se suman 1 a cada exponente y se multiplica: ${f.map(([, e]) => `(${e}+1)`).join(' × ')} = ${t}.`);
     return {
-      text: `¿Cuántos divisores tiene el número ${n}?`, answer: t,
+      text: `¿Cuántos divisores positivos tiene el número ${n}?`, answer: t,
       wrong: [t - 1, t + 1, t - 2, f.reduce((s, [, e]) => s + e, 0), t + 2], steps
     };
   } });
@@ -89,13 +89,13 @@
       steps: [`Se descompone: ${num(n)} = ${fs}.`, `Los factores primos son ${ps.join(', ')}; el mayor es ${Math.max(...ps)}.`]
     };
     if (kind === 1) return {
-      text: `Descompón ${num(n)} en factores primos. ¿Cuánto suman sus factores primos distintos?`, answer: ps.reduce((s, x) => s + x, 0),
+      text: `Al descomponer ${num(n)} en factores primos, ¿cuál es la suma de sus factores primos distintos?`, answer: ps.reduce((s, x) => s + x, 0),
       wrong: [f.reduce((s, [p, e]) => s + p * e, 0), ps.reduce((a, b) => a * b, 1), Math.max(...ps), ps.reduce((s, x) => s + x, 0) + 1],
       steps: [`${num(n)} = ${fs}.`, `Factores primos distintos: ${ps.join(', ')}.`, `Su suma es ${ps.join(' + ')} = ${ps.reduce((s, x) => s + x, 0)}.`]
     };
     const cnt = f.reduce((s, [, e]) => s + e, 0);
     return {
-      text: `Si se escribe ${num(n)} como producto de factores primos (repitiendo los que se repiten), ¿cuántos factores primos se usan en total?`, answer: cnt,
+      text: `Al escribir ${num(n)} como producto de factores primos, ¿cuántos factores se utilizan en total (contando los factores repetidos)?`, answer: cnt,
       wrong: [ps.length, cnt + 1, cnt - 1, cnt + 2],
       steps: [`${num(n)} = ${fs}.`, `Contando cada repetición: ${f.map(([p, e]) => `${p} aparece ${e} ${e === 1 ? 'vez' : 'veces'}`).join(', ')}.`, `En total hay ${cnt} factores.`]
     };
@@ -142,7 +142,7 @@
       const lights = pair.length === 2 ? 'Dos luces' : 'Tres luces';
       if (d === 1) {
         return {
-          text: `${lights} se encienden al mismo tiempo ahora. Se vuelven a encender cada ${list} minutos, respectivamente. ¿Después de cuántos minutos se encenderán juntas otra vez?`,
+          text: `${lights} se encienden simultáneamente en este momento y luego se vuelven a encender cada ${list} minutos, respectivamente. ¿Después de cuántos minutos se encienden nuevamente de manera simultánea?`,
           answer: L, unit: 'min', wrong: [pair.reduce((a, b) => a * b, 1), U.gcdAll(pair), L * 2, pair.reduce((s, x) => s + x, 0)],
           steps: [`Hay que encontrar el MCM de ${list}.`, `MCM = ${L}.`, `Se encenderán juntas otra vez después de ${L} minutos.`]
         };
@@ -150,7 +150,7 @@
       const cnt = Math.floor(tot / L);
       if (!H || cnt < 2 || tot % L === 0 || L < 6) U.fail();
       return {
-        text: `${lights} se encienden al mismo tiempo ahora. Se vuelven a encender cada ${list} minutos, respectivamente. En las próximas ${H} horas, ¿cuántas veces se encienden juntas de nuevo (sin contar el momento de partida)?`,
+        text: `${lights} se encienden simultáneamente en este momento y luego se vuelven a encender cada ${list} minutos, respectivamente. En las próximas ${H} horas, ¿cuántas veces se encienden nuevamente de manera simultánea (sin contar el instante inicial)?`,
         answer: cnt, wrong: [cnt + 1, cnt - 1, Math.floor(tot / pair[0]), L],
         steps: [`MCM de ${list} = ${L}: coinciden cada ${L} minutos.`, `${H} horas = ${tot} minutos.`, `${tot} ÷ ${L} = ${(tot / L).toFixed(2).replace('.', ',')}; solo cuentan los ciclos completos: ${cnt} veces.`]
       };
@@ -161,14 +161,14 @@
       const a = g * x, b = g * y, gg = U.gcd(a, b);
       const ask = d === 1 ? 0 : 1;
       return {
-        text: `En un curso hay ${a} niñas y ${b} niños. Se quieren formar equipos con la misma cantidad de niñas y de niños, sin que sobre nadie y usando a todos. ${ask === 0 ? '¿Cuántos equipos se pueden formar como máximo?' : 'Si se forma el máximo de equipos, ¿cuántas niñas tiene cada equipo?'}`,
+        text: `En un curso hay ${a} niñas y ${b} niños. Se desea formar la mayor cantidad posible de equipos, con la misma cantidad de niñas y de niños en cada uno y sin que sobre ningún estudiante. ${ask === 0 ? '¿Cuántos equipos se forman?' : '¿Cuántas niñas tiene cada equipo?'}`,
         answer: ask === 0 ? gg : a / gg, wrong: ask === 0 ? [U.lcm(a, b), a + b, gg * 2, Math.min(a, b)] : [gg, b / gg, a, a / gg + 1],
         steps: [`El máximo número de equipos es el MCD de ${a} y ${b}.`, `MCD(${a}, ${b}) = ${gg}.`, ask === 0 ? `Se pueden formar ${gg} equipos.` : `Cada equipo tiene ${a} ÷ ${gg} = ${a / gg} niñas.`]
       };
     }
     const m = r.sample([2, 3, 4, 5, 6, 7, 8, 9], 3), a = g * m[0], b = g * m[1], c = g * m[2], gg = U.gcdAll([a, b, c]);
     return {
-      text: `Una tienda tiene ${a} cuadernos, ${b} lápices y ${c} gomas. Se arman paquetes iguales con los tres productos, sin que sobre ninguno y con la mayor cantidad posible de paquetes. ¿Cuántos productos en total tiene cada paquete?`,
+      text: `Una tienda tiene ${a} cuadernos, ${b} lápices y ${c} gomas. Se arman paquetes idénticos con los tres productos, sin que sobre ninguno y de modo que la cantidad de paquetes sea la mayor posible. ¿Cuántos productos contiene cada paquete?`,
       answer: (a + b + c) / gg, wrong: [gg, a + b + c, (a + b + c) / gg + gg, (a + b + c) / (gg * 2)],
       steps: [`La mayor cantidad de paquetes es el MCD de ${a}, ${b} y ${c}.`, `MCD = ${gg}, así que se arman ${gg} paquetes.`, `Cada uno lleva ${a / gg} cuadernos, ${b / gg} lápices y ${c / gg} gomas.`, `Productos por paquete: ${a / gg} + ${b / gg} + ${c / gg} = ${(a + b + c) / gg}.`]
     };

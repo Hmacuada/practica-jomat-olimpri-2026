@@ -32,7 +32,7 @@
       if (a === b) U.fail();
       const A = horiz ? [a, k] : [k, a], B = horiz ? [b, k] : [k, b], dist = Math.abs(a - b);
       return {
-        text: `Los puntos A${pt(...A)} y B${pt(...B)} están en la misma ${horiz ? 'fila' : 'columna'}. ¿Cuántas unidades separan A de B?`,
+        text: `Los puntos A${pt(...A)} y B${pt(...B)} están ubicados sobre una misma recta ${horiz ? 'horizontal' : 'vertical'}. ¿Cuál es la distancia, en unidades, entre A y B?`,
         svg: U.svgGrid({ x0: 0, x1: 10, y0: 0, y1: 10, points: [{ x: A[0], y: A[1], label: 'A' }, { x: B[0], y: B[1], label: 'B' }], segs: [{ a: A, b: B, cls: 'ln hl' }] }),
         answer: dist, unit: 'unidades', wrong: [a + b, dist + 1, dist - 1, Math.max(a, b)],
         steps: [`Los dos puntos tienen ${horiz ? 'la misma coordenada y' : 'la misma coordenada x'}, así que solo hay que restar las otras coordenadas.`, `|${a} − ${b}| = ${dist} unidades.`]
@@ -42,7 +42,7 @@
       const horiz = r.chance(0.5), k = nz(r), a = -r.int(1, 6), b = r.int(1, 6);
       const A = horiz ? [a, k] : [k, a], B = horiz ? [b, k] : [k, b], dist = b - a;
       return {
-        text: `Los puntos A${pt(...A)} y B${pt(...B)} están en la misma ${horiz ? 'fila' : 'columna'}. ¿Cuántas unidades separan A de B?`,
+        text: `Los puntos A${pt(...A)} y B${pt(...B)} están ubicados sobre una misma recta ${horiz ? 'horizontal' : 'vertical'}. ¿Cuál es la distancia, en unidades, entre A y B?`,
         svg: U.svgGrid({ x0: -7, x1: 7, y0: -7, y1: 7, cell: 20, points: [{ x: A[0], y: A[1], label: 'A' }, { x: B[0], y: B[1], label: 'B' }], segs: [{ a: A, b: B, cls: 'ln hl' }] }),
         answer: dist, unit: 'unidades', wrong: [Math.abs(b) - Math.abs(a) > 0 ? Math.abs(b) - Math.abs(a) : dist + 2, dist - 1, dist + 1, Math.abs(a) * b, Math.abs(a) + Math.abs(b) + 2],
         steps: [`A y B están a distinto lado del eje: se suman las distancias al eje.`, `${Math.abs(a)} + ${b} = ${dist} unidades.`, `(También: ${b} − (${num(a)}) = ${dist}.)`]
@@ -121,7 +121,7 @@
       const ans = ask === 'x' ? cx : ask === 'y' ? cy : cx + cy;
       const mv = moves.map(([i, k]) => `${k} ${k === 1 ? 'unidad' : 'unidades'} ${dirs[i][0]}`).join(', luego ').replace(/, luego ([^,]+)$/, ' y luego $1');
       return {
-        text: `Un punto parte en ${pt(x, y)} y se mueve ${mv}. ${ask === 'x' ? '¿Cuál es la coordenada x del punto final?' : ask === 'y' ? '¿Cuál es la coordenada y del punto final?' : '¿Cuánto suman las dos coordenadas del punto final?'}`,
+        text: `Un punto se ubica inicialmente en ${pt(x, y)} y se desplaza ${mv}. ${ask === 'x' ? '¿Cuál es la coordenada x del punto final?' : ask === 'y' ? '¿Cuál es la coordenada y del punto final?' : '¿Cuál es la suma de las dos coordenadas del punto final?'}`,
         answer: ans, wrong: ask === 'suma' ? [cx, cy, ans + 2, ans - 2, x + y] : [ask === 'x' ? cy : cx, ans + 1, ans - 1, ask === 'x' ? x : y],
         steps: [`Se sigue cada movimiento: ${partial.map((p, i) => `${pt(...p)}`).join(' → ')}.`, `Punto final: ${pt(cx, cy)}.`, ask === 'x' ? `La coordenada x es ${cx}.` : ask === 'y' ? `La coordenada y es ${cy}.` : `Suma: ${cx} + ${cy} = ${cx + cy}.`]
       };
@@ -144,7 +144,7 @@
     if (d === 2) {
       const [a, b] = r.sample(SHAPES, 2);
       return {
-        text: `Si se suman los ejes de simetría de ${a[0]} y de ${b[0]}, ¿cuánto se obtiene?`, answer: a[1] + b[1],
+        text: `¿Cuál es la suma de la cantidad de ejes de simetría de ${a[0]} y de ${b[0]}?`, answer: a[1] + b[1],
         wrong: [a[1] * b[1], a[1] + b[1] + 1, a[1] + b[1] - 1, Math.max(a[1], b[1])].filter(v => v !== a[1] + b[1]),
         steps: [`${a[0][0].toUpperCase() + a[0].slice(1)} tiene ${a[1]} ejes.`, `${b[0][0].toUpperCase() + b[0].slice(1)} tiene ${b[1]} ejes.`, `Total: ${a[1]} + ${b[1]} = ${a[1] + b[1]}.`]
       };
@@ -152,7 +152,7 @@
     const words = ['MATEMATICA', 'OLIMPIADA', 'TRIANGULO', 'PERIMETRO', 'FRACCION', 'PROBLEMA', 'DIVISORES', 'MULTIPLO', 'DECIMAL', 'VOLUMEN', 'GEOMETRIA', 'PROPORCION', 'SIMETRIA', 'AUTOMOVIL', 'UNIVERSO'];
     const w = r.pick(words), good = w.split('').filter(c => VSYM.has(c)), cnt = good.length;
     return {
-      text: `Las letras A, H, I, M, O, T, U, V, W, X e Y tienen un eje de simetría vertical (se ven iguales a cada lado de una línea vertical). ¿Cuántas letras de la palabra ${w} tienen un eje de simetría vertical?`, answer: cnt,
+      text: `Las letras A, H, I, M, O, T, U, V, W, X e Y poseen un eje de simetría vertical (se ven iguales a cada lado de una línea vertical). ¿Cuántas letras de la palabra ${w} poseen un eje de simetría vertical?`, answer: cnt,
       wrong: [cnt + 1, cnt - 1, w.length - cnt, new Set(good).size],
       steps: [`Se revisa cada letra de ${w.split('').join(' ')}.`, `Tienen eje vertical: ${good.join(', ')}.`, `En total son ${cnt} letras.`]
     };

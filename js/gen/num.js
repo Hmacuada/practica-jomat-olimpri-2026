@@ -101,7 +101,7 @@
       const wrong = [];
       for (let p = 0; p < len; p++) if (p !== pos) wrong.push(dig * 10 ** p);
       return {
-        text: `En el número ${num(n)}, ¿cuál es el valor del dígito ${dig}?`, answer: val, wrong,
+        text: `En el número ${num(n)}, ¿cuál es el valor posicional del dígito ${dig}?`, answer: val, wrong,
         steps: [`El ${dig} está en el lugar de las ${names[pos]}.`, `Su valor es ${dig} × ${num(10 ** pos)} = ${num(val)}.`]
       };
     }
@@ -112,7 +112,7 @@
     [swap[0].dg, swap[1].dg] = [swap[1].dg, swap[0].dg];
     const wswap = swap.reduce((s, t) => s + t.dg * 10 ** t.p, 0);
     return {
-      text: `¿Qué número es ${terms.map(t => `${t.dg} × ${num(10 ** t.p)}`).join(' + ')}?`,
+      text: `¿Qué número se obtiene al calcular ${terms.map(t => `${t.dg} × ${num(10 ** t.p)}`).join(' + ')}?`,
       answer: m, wrong: [wswap, m * 10, m / 10, m - terms[terms.length - 1].dg * 10 ** terms[terms.length - 1].p, m + 1],
       steps: terms.map(t => `${t.dg} × ${num(10 ** t.p)} = ${num(t.dg * 10 ** t.p)}`).concat([`Se suman todos: ${num(m)}.`])
     };
@@ -127,7 +127,7 @@
     if (n % p === 0) n++;
     const fl = Math.floor(n / p) * p, rd = Math.round(n / p) * p, dig = Math.floor((n % p) / (p / 10));
     return {
-      text: `Aproxima ${num(n)} a la ${name} más cercana.`, answer: rd,
+      text: `¿Cuál es la aproximación de ${num(n)} a la ${name} más cercana?`, answer: rd,
       wrong: [fl, fl + p, Math.round(n / (p * 10)) * p * 10, Math.round(n / (p / 10)) * (p / 10), rd + p, rd - p],
       steps: [`Se mira la cifra siguiente a la ${name}: es ${dig}.`,
         dig >= 5 ? `Como ${dig} es 5 o más, se sube a la ${name} siguiente.` : `Como ${dig} es menor que 5, la ${name} se mantiene.`,
@@ -145,17 +145,17 @@
     const q = Math.floor(n / k), rem = n % k;
     const kind = r.int(0, 2);
     if (kind === 0) return {
-      text: `Se tienen ${num(n)} ${item[0]} y se guardan en ${box[1]} con ${k} cada ${box[0]}. ¿${qb} ${box[1]} se llenan por completo?`,
+      text: `Se tienen ${num(n)} ${item[0]}, que se guardan en ${box[1]} con ${k} en cada ${box[0]}. ¿${qb} ${box[1]} se llenan por completo?`,
       answer: q, wrong: [q + 1, rem, q - 1, q + rem],
       steps: [`Se divide ${num(n)} ÷ ${k} = ${num(q)} y sobran ${rem}.`, `Se llenan ${num(q)} ${box[1]} por completo.`]
     };
     if (kind === 1) return {
-      text: `Se tienen ${num(n)} ${item[0]} y se guardan en ${box[1]} con ${k} cada ${box[0]}. ¿${qi} ${item[0]} sobran sin guardar?`,
+      text: `Se tienen ${num(n)} ${item[0]}, que se guardan en ${box[1]} con ${k} en cada ${box[0]}. ¿${qi} ${item[0]} sobran sin guardar?`,
       answer: rem, wrong: [q, k - rem, rem + 1, rem - 1],
       steps: [`Se divide ${num(n)} ÷ ${k} = ${num(q)} y el resto es ${rem}.`, `Sobran ${rem} ${item[0]}.`]
     };
     return {
-      text: `Se tienen ${num(n)} ${item[0]} y en cada ${box[0]} caben ${k}. ¿${qb} ${box[1]} hacen falta para guardar todos los objetos?`.replace('todos los objetos', item[1] === 'f' ? 'todas' : 'todos'),
+      text: `Se tienen ${num(n)} ${item[0]} y en cada ${box[0]} caben ${k}. ¿${qb} ${box[1]} se necesitan para guardar todos los objetos?`.replace('todos los objetos', item[1] === 'f' ? 'todas' : 'todos'),
       answer: q + 1, wrong: [q, q + 2, rem, q - 1],
       steps: [`Se divide ${num(n)} ÷ ${k} = ${num(q)} y sobran ${rem}.`, `Para esas ${rem} hace falta ${box[2] === 'f' ? 'otra' : 'otro'} ${box[0]} más: ${num(q)} + 1 = ${num(q + 1)}.`]
     };
@@ -169,7 +169,7 @@
     if (d === 1) {
       const profit = n * k * m;
       return {
-        text: `${p.name} compra ${n} cajas de ${art}. Cada caja trae ${k} unidades y cuesta ${$(box)}. Vende todas las unidades a ${$(s)} cada una. ¿Cuál es su ganancia total?`,
+        text: `${p.name} compra ${n} cajas de ${art}. Cada caja contiene ${k} unidades y cuesta ${$(box)}. ${p.name} vende todas las unidades a ${$(s)} cada una. ¿Cuál es la ganancia total de ${p.name}?`,
         answer: profit, unit: '$', wrong: [units * s, cost, k * m, profit + box, units * m - cost],
         steps: [`Costo: ${n} × ${$(box)} = ${$(cost)}.`, `Unidades: ${n} × ${k} = ${units}. Ingreso: ${units} × ${$(s)} = ${$(units * s)}.`, `Ganancia: ${$(units * s)} − ${$(cost)} = ${$(profit)}.`]
       };
@@ -178,7 +178,7 @@
       const x = r.int(2, k), sold = units - x, profit = sold * s - cost;
       if (profit <= 0) U.fail();
       return {
-        text: `${p.name} compra ${n} cajas de ${art}. Cada caja trae ${k} unidades y cuesta ${$(box)}. Vende todas menos ${x} unidades, a ${$(s)} cada una. ¿Cuál es su ganancia?`,
+        text: `${p.name} compra ${n} cajas de ${art}. Cada caja contiene ${k} unidades y cuesta ${$(box)}. ${p.name} vende todas las unidades, excepto ${x}, a ${$(s)} cada una. ¿Cuál es la ganancia de ${p.name}?`,
         answer: profit, unit: '$', wrong: [units * s - cost, sold * s, cost, profit + x * s, profit - x * cu],
         steps: [`Costo: ${n} × ${$(box)} = ${$(cost)}.`, `Vende ${units} − ${x} = ${sold} unidades.`, `Ingreso: ${sold} × ${$(s)} = ${$(sold * s)}.`, `Ganancia: ${$(sold * s)} − ${$(cost)} = ${$(profit)}.`]
       };
@@ -187,7 +187,7 @@
     const income = half * s + half * s2, profit = income - cost3;
     if (profit <= 0) U.fail();
     return {
-      text: `${p.name} compra ${n} cajas de ${art}. Cada caja trae ${kk} unidades y cuesta ${$(box3)}. La mitad de las unidades las vende a ${$(s)} cada una y la otra mitad, en oferta, a ${$(s2)} cada una. ¿Cuál es su ganancia total?`,
+      text: `${p.name} compra ${n} cajas de ${art}. Cada caja contiene ${kk} unidades y cuesta ${$(box3)}. ${p.name} vende la mitad de las unidades a ${$(s)} cada una y la otra mitad, en oferta, a ${$(s2)} cada una. ¿Cuál es la ganancia total de ${p.name}?`,
       answer: profit, unit: '$', wrong: [income, units3 * s - cost3, cost3, half * s - cost3, profit + 10 * half],
       steps: [`Costo: ${n} × ${$(box3)} = ${$(cost3)}.`, `Unidades: ${n} × ${kk} = ${units3}; la mitad son ${half}.`, `Ingreso: ${half} × ${$(s)} + ${half} × ${$(s2)} = ${$(half * s)} + ${$(half * s2)} = ${$(income)}.`, `Ganancia: ${$(income)} − ${$(cost3)} = ${$(profit)}.`]
     };

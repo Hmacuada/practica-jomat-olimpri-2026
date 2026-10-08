@@ -42,33 +42,33 @@
     const q = s.q, res = s.res;
     let ans = '', fb = '';
     if (q.type === 'mc') {
-      ans = `<fieldset class="opts" ${res ? 'disabled' : ''}><legend>Elige una alternativa</legend>${q.options.map((o, k) => {
+      ans = `<fieldset class="opts" ${res ? 'disabled' : ''}><legend>Seleccione una alternativa</legend>${q.options.map((o, k) => {
         let cls = 'opt';
         if (res) { cls += ' locked'; if (k === q.correct) cls += ' right'; else if (k === res.pick) cls += ' wrong'; }
         return `<label class="${cls}"><input type="radio" name="opt" value="${k}" data-in="p-pick" ${res && res.pick === k ? 'checked' : ''}>
           <span class="letter" aria-hidden="true">${O.LETTERS[k]}</span><span class="sr-only">Alternativa ${O.LETTERS[k]}: </span><span class="otext">${rich(o)}</span></label>`;
       }).join('')}</fieldset>`;
     } else if (q.type === 'open') {
-      ans = `<label for="pans" style="font-weight:700;display:block;margin-bottom:6px">Tu respuesta${q.unit && q.unit !== '$' ? ` (en ${esc(q.unit)})` : q.unit === '$' ? ' (en pesos)' : ''}</label>
+      ans = `<label for="pans" style="font-weight:700;display:block;margin-bottom:6px">Respuesta${q.unit && q.unit !== '$' ? ` (en ${esc(q.unit)})` : q.unit === '$' ? ' (en pesos)' : ''}</label>
         <div class="inputrow">${q.unit === '$' ? '<span class="unit">$</span>' : ''}<input id="pans" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-enter="p-check" value="${res ? esc(res.val) : ''}" ${res ? 'readonly' : ''}>${q.unit && q.unit !== '$' ? `<span class="unit">${esc(q.unit)}</span>` : ''}</div>
         <p class="hint">${UI.hintFor(q)}</p>
         ${res ? '' : '<p style="margin-top:12px"><button class="btn primary" type="button" data-act="p-check">Comprobar</button></p>'}`;
     } else {
       ans = res
         ? `<div class="userbox">${(res.text || '').trim() ? esc(res.text) : '<em>No escribiste nada</em>'}</div>`
-        : `<label for="pproc" style="font-weight:700;display:block;margin-bottom:6px">Escribe aquí tu procedimiento</label>
-           <textarea id="pproc" placeholder="Anota los pasos que harías…"></textarea>
-           <p class="hint">Este problema no se corrige solo: pulsa «Ver solución» y compara.</p>
+        : `<label for="pproc" style="font-weight:700;display:block;margin-bottom:6px">Procedimiento</label>
+           <textarea id="pproc" placeholder="Escriba los pasos de la resolución…"></textarea>
+           <p class="hint">Este problema no se corrige automáticamente: pulse «Ver solución» y compare el procedimiento.</p>
            <p style="margin-top:12px"><button class="btn primary" type="button" data-act="p-show">Ver solución</button></p>`;
     }
     if (res && (q.type !== 'dev' || res.shown)) {
       const good = q.type === 'dev' ? null : res.ok;
       fb = `<div class="feedback ${good === null ? '' : good ? 'ok' : 'bad'}" role="status" tabindex="-1" id="fb">
-        <h3>${q.type === 'dev' ? 'Solución paso a paso' : good ? '¡Correcto!' : 'No es esa. ¡Revisemos!'}</h3>
+        <h3>${q.type === 'dev' ? 'Solución paso a paso' : good ? 'Respuesta correcta' : 'Respuesta incorrecta. Revisemos la solución.'}</h3>
         ${q.type !== 'dev' && !good ? `<p>La respuesta correcta es <strong>${rich(q.type === 'mc' ? `${O.LETTERS[q.correct]}) ${q.options[q.correct]}` : q.display)}</strong>.</p>` : ''}
         ${q.type === 'dev' ? `<p>Respuesta: <strong>${rich(q.display)}</strong></p>` : ''}
         <ol class="steps">${q.steps.map(x => `<li>${rich(x)}</li>`).join('')}</ol>
-        ${q.type === 'dev' && res.ev === undefined ? `<div class="selfeval" role="group" aria-label="Autoevaluación"><p>¿Cómo te fue?</p><div class="btn-row">${[[1, 'Lo logré'], [0.5, 'Casi'], [0, 'No lo logré']].map(([v, t]) => `<button class="btn small" type="button" data-act="p-eval" data-v="${v}">${t}</button>`).join('')}</div></div>` : ''}
+        ${q.type === 'dev' && res.ev === undefined ? `<div class="selfeval" role="group" aria-label="Autoevaluación"><p>Autoevaluación: ¿cómo resultó el procedimiento?</p><div class="btn-row">${[[1, 'Lo logré'], [0.5, 'Casi'], [0, 'No lo logré']].map(([v, t]) => `<button class="btn small" type="button" data-act="p-eval" data-v="${v}">${t}</button>`).join('')}</div></div>` : ''}
         ${q.type !== 'dev' || res.ev !== undefined ? '<div class="btn-row" style="margin-top:14px"><button class="btn primary" type="button" data-act="p-next" id="pnext">Siguiente pregunta</button><button class="btn ghost" type="button" data-act="p-setup">Cambiar tema</button></div>' : ''}
       </div>`;
     }

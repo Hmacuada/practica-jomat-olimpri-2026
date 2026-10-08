@@ -17,12 +17,29 @@ const N = Number(process.argv[2]) || 500;
 let errors = 0, checks = 0;
 const bad = (msg) => { errors++; if (errors <= 60) console.log('  ✗ ' + msg); };
 const BAD_STR = /undefined|NaN|Infinity|\[object|null/;
+// Lenguaje: el enunciado debe ser formal y gramaticalmente correcto (errores que ya aparecieron antes)
+const BAD_LANG = [
+  [/^(Calcula|Expresa|Descompón|Observa|Escribe|Aproxima|Dibuja|Halla|Encuentra|Soy|Pienso|Elige|Mira)\b/, 'enunciado informal o en primera persona'],
+  [/\bcm cm\b/, '"cm" repetido'],
+  [/\bde el\b/, '"de el" en lugar de "del"'],
+  [/\bsándwichs\b/i, 'plural "sándwichs"'],
+  [/\b(un) galleta\b/i, '"un galleta"'],
+  [/\bCuántos (gallinas|figuritas|láminas|cartas|bolitas|zapatillas|naranjas|galletas|manzanas)\b/, 'concordancia de género ("Cuántos" con sustantivo femenino)'],
+  [/\bCuántas (lápices|conejos|sobres|bombones|cajones|perros|gatos|días)\b/, 'concordancia de género ("Cuántas" con sustantivo masculino)'],
+  [/\bveces de\b/, '"veces de"'],
+  [/\b(el|un) (doble|triple) (un|el|la|de lo) /i, 'falta "de" tras doble/triple'],
+  [/\bUnas? zapatillas (cuesta|costaba|se vende)\b/, 'verbo singular con "zapatillas"'],
+  [/\blas (perros|gatos|hombres|niños)\b/, 'artículo femenino con sustantivo masculino'],
+  [/  +/, 'espacios dobles'],
+  [/ [,.;?]/, 'espacio antes de signo de puntuación']
+];
 
 function strip(html) { return String(html); }
 
 function checkQuestion(q, g, type, d, seed) {
   const where = `${g.id} [${type}, d${d}, ${seed}]`;
   checks++;
+  for (const [re, why] of BAD_LANG) { if (re.test(q.text)) return bad(`${where}: ${why} → "${q.text.replace(/\n/g, ' / ')}"`); }
   for (const s of [q.text, q.display, ...(q.options || []), ...q.steps]) {
     if (BAD_STR.test(s)) return bad(`${where}: texto con valor inválido: "${s}"`);
   }
@@ -120,17 +137,17 @@ console.log('Verificación independiente (se recalcula la respuesta desde el enu
     'num.prioridad': q => { const m = q.text.match(/valor de (.+)\?$/); if (!m) return null; return Function('return ' + m[1].replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'))(); },
     'div.divisores': q => { const m = q.text.match(/número (\d+)\?/); return m ? U.divisors(+m[1]).length : null; },
     'div.mcm_mcd': q => { const m = q.text.match(/\((MCM|MCD)\) de ([\d, y]+)\?/); if (!m) return null; const ns = m[2].split(/, | y /).map(Number); return m[1] === 'MCM' ? ns.reduce((a, b) => a * b / U.gcd(a, b)) : ns.reduce((a, b) => U.gcd(a, b)); },
-    'dec.porcentaje_de': q => { const m = q.text.match(/^¿Cuánto es el (\d+) % de ([\d.]+)\?$/); return m ? +nums(m[2]) * +m[1] / 100 : null; },
-    'pat.termino_enesimo': q => { const m = q.text.match(/así: ([\d., ]+), … ¿Qué número ocupa la posición (\d+)\?/); if (!m) return null; const t = m[1].split(', ').map(x => +nums(x)); return t[0] + (+m[2] - 1) * (t[1] - t[0]); },
+    'dec.porcentaje_de': q => { const m = q.text.match(/^¿Cuál es el (\d+) % de ([\d.]+)\?$/); return m ? +nums(m[2]) * +m[1] / 100 : null; },
+    'pat.termino_enesimo': q => { const m = q.text.match(/son:\n([\d., ]+), …\n¿Qué número ocupa la posición (\d+) de esta secuencia\?/); if (!m) return null; const t = m[1].split(', ').map(x => +nums(x)); return t[0] + (+m[2] - 1) * (t[1] - t[0]); },
     'dat.moda_mediana': q => {
-      const m = q.text.match(/son: ([\d, ]+)\. ¿Cuál es (?:la|el) (moda|mediana|rango)/); if (!m) return null;
+      const m = q.text.match(/datos: ([\d, ]+)\. ¿Cuál es (?:la|el) (moda|mediana|rango)/); if (!m) return null;
       const v = m[1].split(', ').map(Number), srt = v.slice().sort((a, b) => a - b);
       if (m[2] === 'rango') return srt[srt.length - 1] - srt[0];
       if (m[2] === 'mediana') { const n = srt.length; return n % 2 ? srt[(n - 1) / 2] : (srt[n / 2 - 1] + srt[n / 2]) / 2; }
       const c = {}; v.forEach(x => { c[x] = (c[x] || 0) + 1; }); return +Object.keys(c).sort((a, b) => c[b] - c[a])[0];
     },
     'fra.operar': q => {
-      const m = plain(q.text).match(/^Calcula (\d+)\/(\d+) ([+−×÷]) (\d+)\/(\d+)$/); if (!m) return null;
+      const m = plain(q.text).match(/^¿Cuál es el resultado de (\d+)\/(\d+) ([+−×÷]) (\d+)\/(\d+)\?$/); if (!m) return null;
       const [a, b, c, d] = [m[1], m[2], m[4], m[5]].map(Number), x = a / b, y = c / d;
       return m[3] === '+' ? x + y : m[3] === '−' ? x - y : m[3] === '×' ? x * y : x / y;
     },
@@ -141,7 +158,7 @@ console.log('Verificación independiente (se recalcula la respuesta desde el enu
       return c;
     },
     'num.redondeo': q => {
-      const m = q.text.match(/^Aproxima ([\d.]+) a la (decena de mil|centena de mil|unidad de mil|decena|centena) más cercana/); if (!m) return null;
+      const m = q.text.match(/^¿Cuál es la aproximación de ([\d.]+) a la (decena de mil|centena de mil|unidad de mil|decena|centena) más cercana\?/); if (!m) return null;
       const p = { 'decena': 10, 'centena': 100, 'unidad de mil': 1000, 'decena de mil': 10000, 'centena de mil': 100000 }[m[2]];
       return Math.round(+nums(m[1]) / p) * p;
     },

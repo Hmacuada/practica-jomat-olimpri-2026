@@ -5,9 +5,9 @@
   let exam = null, qs = null, timerId = null, said = {};
 
   UI.hintFor = function (q) {
-    if (q.kind === 'frac') return q.answer.mixed ? 'Escribe una fracción como 7/3 o un número mixto como 2 1/3 (entero, espacio, fracción).' : 'Escribe la fracción como a/b, por ejemplo 3/4.';
-    if (q.kind === 'dec') return 'Puedes usar coma o punto decimal, por ejemplo 3,5.';
-    return 'Escribe solo el número, sin unidades.';
+    if (q.kind === 'frac') return q.answer.mixed ? 'Escriba una fracción como 7/3 o un número mixto como 2 1/3 (entero, espacio y fracción).' : 'Escriba la fracción en la forma a/b, por ejemplo 3/4.';
+    if (q.kind === 'dec') return 'Puede usar coma o punto decimal, por ejemplo 3,5.';
+    return 'Escriba únicamente el número, sin unidades.';
   };
   UI.isAnswered = function (q, a) {
     if (q.type === 'mc') return typeof a === 'number';
@@ -91,21 +91,21 @@
     const i = exam.cur, q = qs[i], a = exam.answers[i], total = qs.length;
     let ans = '';
     if (q.type === 'mc') {
-      ans = `<fieldset class="opts"><legend>Elige una alternativa</legend>${q.options.map((o, k) => `
+      ans = `<fieldset class="opts"><legend>Seleccione una alternativa</legend>${q.options.map((o, k) => `
         <label class="opt"><input type="radio" name="opt" value="${k}" data-in="pick" ${a === k ? 'checked' : ''}>
         <span class="letter" aria-hidden="true">${O.LETTERS[k]}</span><span class="sr-only">Alternativa ${O.LETTERS[k]}: </span><span class="otext">${rich(o)}</span></label>`).join('')}</fieldset>
-        <p style="margin-top:12px"><button class="btn small ghost" type="button" data-act="clear">Borrar mi respuesta</button></p>`;
+        <p style="margin-top:12px"><button class="btn small ghost" type="button" data-act="clear">Borrar respuesta</button></p>`;
     } else if (q.type === 'open') {
-      ans = `<label for="ans" style="font-weight:700;display:block;margin-bottom:6px">Tu respuesta${q.unit && q.unit !== '$' ? ` (en ${esc(q.unit)})` : q.unit === '$' ? ' (en pesos)' : ''}</label>
+      ans = `<label for="ans" style="font-weight:700;display:block;margin-bottom:6px">Respuesta${q.unit && q.unit !== '$' ? ` (en ${esc(q.unit)})` : q.unit === '$' ? ' (en pesos)' : ''}</label>
         <div class="inputrow">${q.unit === '$' ? '<span class="unit">$</span>' : ''}<input id="ans" type="text" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" data-in="text" value="${esc(a || '')}">${q.unit && q.unit !== '$' ? `<span class="unit">${esc(q.unit)}</span>` : ''}</div>
         <p class="hint">${UI.hintFor(q)}</p>`;
     } else {
       const v = a || { t: '', f: '' };
-      ans = `<label for="proc" style="font-weight:700;display:block;margin-bottom:6px">Escribe aquí tu procedimiento</label>
-        <textarea id="proc" data-in="proc" placeholder="Anota los pasos que harías para resolver el problema…">${esc(v.t || '')}</textarea>
+      ans = `<label for="proc" style="font-weight:700;display:block;margin-bottom:6px">Procedimiento</label>
+        <textarea id="proc" data-in="proc" placeholder="Escriba los pasos de la resolución…">${esc(v.t || '')}</textarea>
         <label for="final" style="font-weight:700;display:block;margin:14px 0 6px">Respuesta final (opcional)</label>
         <div class="inputrow"><input id="final" type="text" autocomplete="off" spellcheck="false" data-in="final" value="${esc(v.f || '')}"></div>
-        <p class="hint">Este problema no se corrige solo. Al entregar, verás la solución paso a paso y te autoevaluarás.</p>`;
+        <p class="hint">Este problema no se corrige automáticamente. Al entregar la prueba se mostrará la solución paso a paso para realizar la autoevaluación.</p>`;
     }
     const marked = !!exam.marks[i];
     UI.$('#qarea').innerHTML = `

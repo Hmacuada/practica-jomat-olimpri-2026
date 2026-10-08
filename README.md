@@ -79,7 +79,7 @@ O.reg({
 });
 ```
 
-Reglas útiles: usa **solo `r`** para el azar (nunca `Math.random`), llama a `U.fail()` si los números salieron mal (se reintenta solo), escribe fracciones en el texto como `U.fr(3, 4)` y números con `U.num(x)` (formato chileno).
+Reglas útiles: redacta el enunciado en registro formal, como pregunta (`¿Cuál es…?`) o con el imperativo formal (`Exprese…`); usa **solo `r`** para el azar (nunca `Math.random`), llama a `U.fail()` si los números salieron mal (se reintenta solo), escribe fracciones en el texto como `U.fr(3, 4)` y números con `U.num(x)` (formato chileno).
 
 3. Corre `node tests/generators.test.js` para comprobar el generador nuevo.
 
@@ -90,7 +90,7 @@ node tests/generators.test.js        # 500 preguntas por generador, dificultad y
 node tests/generators.test.js 2000   # más exhaustivo
 ```
 
-Para cada generador comprueba que la correcta esté entre las alternativas, que haya exactamente una, que no haya alternativas duplicadas, que no aparezcan resultados negativos, fraccionarios o absurdos cuando no corresponde, que no haya textos con `undefined` o `NaN`, que la misma semilla dé la misma pregunta y que casi nunca haga falta reintentar. Además arma 360 simulacros completos, prueba la corrección de puntajes y el lector de respuestas abiertas, y **recalcula de forma independiente** más de 13.000 respuestas a partir del enunciado.
+Para cada generador comprueba que la correcta esté entre las alternativas, que haya exactamente una, que no haya alternativas duplicadas, que no aparezcan resultados negativos, fraccionarios o absurdos cuando no corresponde, que no haya textos con `undefined` o `NaN`, que la misma semilla dé la misma pregunta y que casi nunca haga falta reintentar. También revisa el **lenguaje** de cada enunciado: que sea formal (sin imperativos como «Calcula» ni primera persona) y sin errores conocidos de concordancia de género y número. Además arma 360 simulacros completos, prueba la corrección de puntajes y el lector de respuestas abiertas, y **recalcula de forma independiente** más de 13.000 respuestas a partir del enunciado.
 
 ## Licencia
 
