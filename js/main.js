@@ -34,6 +34,19 @@
       UI.go(where === 'switch' ? 'welcome' : where);
     });
 
+    // Menú desplegable del usuario (abre/cierra con clic, Escape o tocando fuera)
+    const ubtn = document.getElementById('userbtn'), umenu = document.getElementById('usermenu');
+    const setMenu = open => {
+      umenu.hidden = !open; ubtn.setAttribute('aria-expanded', String(open));
+      if (open) { const f = umenu.querySelector('.umitem'); if (f) f.focus(); }
+    };
+    ubtn.addEventListener('click', e => { e.stopPropagation(); if (!document.body.classList.contains('in-exam')) setMenu(umenu.hidden); });
+    document.addEventListener('click', e => { if (!umenu.hidden && !umenu.contains(e.target)) setMenu(false); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !umenu.hidden) { setMenu(false); ubtn.focus(); } });
+    umenu.addEventListener('keydown', e => { if (e.key === 'Tab') setMenu(false); });
+    // Al cambiar de vista se cierra el menú
+    const go0 = UI.go; UI.go = function () { setMenu(false); return go0.apply(this, arguments); };
+
     // El logo es también la entrada oculta de administración: 7 toques seguidos (en 4 segundos).
     let taps = [];
     document.getElementById('brand').addEventListener('click', e => {

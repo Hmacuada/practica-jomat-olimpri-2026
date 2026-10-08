@@ -34,7 +34,7 @@
       const match = hasF ? O.checkOpen(q, v.f) : null;
       const cur = last.selfEval[q.i];
       body = `<div class="answers"><div class="row"><span class="k">Procedimiento escrito</span></div>
-        <div class="userbox">${(v.t || '').trim() ? esc(v.t) : '<em>No escribiste nada</em>'}</div>
+        <div class="procbox">${(v.t || '').trim() ? esc(v.t) : '<em>No escribiste nada</em>'}</div>
         ${hasF ? `<div class="row"><span class="k">Respuesta final escrita</span><span class="v ${match ? 'ok' : 'bad'}">${esc(v.f)} ${match ? '✔ coincide con la solución' : '✘ no coincide con la solución'}</span></div>` : ''}
         <div class="row"><span class="k">Respuesta correcta</span><span class="v ok">${rich(q.display)}</span></div></div>`;
       body += `<div class="selfeval" role="group" aria-label="Autoevaluación de la pregunta ${q.i + 1}">

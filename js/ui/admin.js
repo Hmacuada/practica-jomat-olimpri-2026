@@ -85,9 +85,9 @@
     const users = O.Users.list(), cur = O.Users.current();
     const rows = users.map(p => {
       const s = O.Users.summary(p.id);
-      return `<tr><td>${UI.avatarHtml(p.name)} <strong>${esc(p.name)}</strong>${cur && cur.id === p.id ? ' <span class="chip">actual</span>' : ''}</td>
-        <td class="num">${s.passed} de ${s.total}</td><td class="num">${s.attempts}</td>
-        <td><div class="btn-row">
+      return `<tr><td data-label="Usuario"><span>${UI.avatarHtml(p.name)} <strong>${esc(p.name)}</strong>${cur && cur.id === p.id ? ' <span class="chip">actual</span>' : ''}</span></td>
+        <td class="num" data-label="Niveles superados">${s.passed} de ${s.total}</td><td class="num" data-label="Intentos">${s.attempts}</td>
+        <td data-label="Acciones"><div class="btn-row">
           <button class="btn small" type="button" data-act="ad-unlock" data-id="${esc(p.id)}" data-name="${esc(p.name)}">Desbloquear niveles</button>
           <button class="btn small" type="button" data-act="ad-reset" data-id="${esc(p.id)}" data-name="${esc(p.name)}">Borrar avance</button>
           <button class="btn small danger" type="button" data-act="ad-del" data-id="${esc(p.id)}" data-name="${esc(p.name)}">Eliminar usuario</button></div></td></tr>`;

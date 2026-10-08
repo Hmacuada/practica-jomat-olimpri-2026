@@ -128,5 +128,6 @@
     const av = UI.$('#uAvatar');
     av.textContent = UI.initial(p.name); av.style.background = UI.avatarColor(p.name);
     UI.$('#uName').textContent = p.name;
+    const n2 = UI.$('#uName2'); if (n2) n2.textContent = p.name;
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

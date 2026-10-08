@@ -55,7 +55,7 @@
         ${res ? '' : '<p style="margin-top:12px"><button class="btn primary" type="button" data-act="p-check">Comprobar</button></p>'}`;
     } else {
       ans = res
-        ? `<div class="userbox">${(res.text || '').trim() ? esc(res.text) : '<em>No escribiste nada</em>'}</div>`
+        ? `<div class="procbox">${(res.text || '').trim() ? esc(res.text) : '<em>No escribiste nada</em>'}</div>`
         : `<label for="pproc" style="font-weight:700;display:block;margin-bottom:6px">Procedimiento</label>
            <textarea id="pproc" placeholder="Escriba los pasos de la resolución…"></textarea>
            <p class="hint">Este problema no se corrige automáticamente: pulse «Ver solución» y compare el procedimiento.</p>

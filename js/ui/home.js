@@ -33,8 +33,8 @@
 
     const histHtml = hist.length ? `<div class="table-wrap"><table class="hist"><caption class="sr-only">Últimos intentos</caption>
       <thead><tr><th scope="col">Fecha</th><th scope="col">Etapa</th><th scope="col">Dificultad</th><th scope="col">Puntaje</th><th scope="col">Código</th></tr></thead><tbody>
-      ${hist.map(h => { const lv = O.levelByKey(h.key); return `<tr><td>${UI.fmtDate(h.ts)}</td><td>${esc(lv ? lv.stage.name : h.key)}</td><td>${lv ? O.DIFFS[lv.diff - 1] : ''}</td>
-        <td class="num"><strong>${h.points % 1 ? String(h.points).replace('.', ',') : h.points}/${h.total}</strong> · ${UI.pct(h.pct)} ${h.pass ? '<span class="chip ok">Superado</span>' : ''}</td><td class="num muted">${esc(h.seed)}</td></tr>`; }).join('')}
+      ${hist.map(h => { const lv = O.levelByKey(h.key); return `<tr><td data-label="Fecha">${UI.fmtDate(h.ts)}</td><td data-label="Etapa">${esc(lv ? lv.stage.name : h.key)}</td><td data-label="Dificultad">${lv ? O.DIFFS[lv.diff - 1] : ''}</td>
+        <td class="num" data-label="Puntaje"><span><strong>${h.points % 1 ? String(h.points).replace('.', ',') : h.points}/${h.total}</strong> · ${UI.pct(h.pct)} ${h.pass ? '<span class="chip ok">Superado</span>' : ''}</span></td><td class="num muted" data-label="Código">${esc(h.seed)}</td></tr>`; }).join('')}
       </tbody></table></div>` : '<p class="muted">Todavía no hay intentos. ¡Empieza por la Clasificatoria · Fácil!</p>';
 
     const me = O.Users.current(), greet = UI.state.greet;

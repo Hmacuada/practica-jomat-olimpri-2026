@@ -40,7 +40,7 @@
       <section class="card" aria-labelledby="sRecTitle" style="margin-top:20px"><h2 id="sRecTitle">Mejores marcas</h2>
         ${rows.length ? `<div class="table-wrap"><table class="hist"><caption class="sr-only">Mejores marcas contra reloj</caption>
           <thead><tr><th scope="col">Configuración</th><th scope="col">Correctas</th><th scope="col">Precisión</th><th scope="col">Fecha</th></tr></thead><tbody>
-          ${rows.map(r => { const [tp, df, mn] = r.k.split('|'); return `<tr><td>${esc(cfgName({ topic: tp, diff: +df, minutes: +mn }))}</td><td class="num"><strong>${r.correct}</strong> de ${r.answered}</td><td class="num">${UI.pct(r.pct)}</td><td class="num muted">${UI.fmtDate(r.ts)}</td></tr>`; }).join('')}
+          ${rows.map(r => { const [tp, df, mn] = r.k.split('|'); return `<tr><td data-label="Configuración">${esc(cfgName({ topic: tp, diff: +df, minutes: +mn }))}</td><td class="num" data-label="Correctas"><strong>${r.correct}</strong> de ${r.answered}</td><td class="num" data-label="Precisión">${UI.pct(r.pct)}</td><td class="num muted" data-label="Fecha">${UI.fmtDate(r.ts)}</td></tr>`; }).join('')}
           </tbody></table></div>` : '<p class="muted">Todavía no hay marcas. ¡Complete la primera sesión!</p>'}
       </section>`);
 
