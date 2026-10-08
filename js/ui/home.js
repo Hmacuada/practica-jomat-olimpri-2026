@@ -51,15 +51,22 @@
       <div class="two" style="margin-top:20px">
         <section class="card" aria-labelledby="histTitle"><h2 id="histTitle">Últimos intentos</h2>${histHtml}
           ${last ? '<p style="margin-top:12px"><button class="btn small" type="button" data-act="showlast">Ver resultados del último simulacro</button></p>' : ''}</section>
+        <div>
+        <section class="card" aria-labelledby="sprintTitle"><h2 id="sprintTitle">Práctica contra reloj</h2>
+          <p>Elija un tema, una dificultad y una duración, y responda la mayor cantidad de preguntas antes de que termine el tiempo.</p>
+          <p class="btn-row"><button class="btn primary" type="button" data-act="sprint">Ir a contra reloj</button></p>
+        </section>
         <section class="card" aria-labelledby="pracTitle"><h2 id="pracTitle">Práctica libre por tema</h2>
           <p>Sin reloj y con corrección inmediata después de cada pregunta. Elige el tema y la dificultad que quieras repasar.</p>
           <p class="btn-row"><button class="btn primary" type="button" data-act="practice">Ir a práctica libre</button></p>
           <p class="hint">Los problemas de desarrollo no se corrigen solos: se comparan con la solución paso a paso. Es ideal que un adulto los revise junto al niño.</p>
         </section>
+        </div>
       </div>`);
 
     UI.handlers.start = el => UI.confirmStart(el.dataset.key);
     UI.handlers.practice = () => UI.go('practice');
+    UI.handlers.sprint = () => UI.go('sprint');
     UI.handlers.showlast = () => UI.go('results', { fromStorage: true });
   };
 

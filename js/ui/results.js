@@ -52,6 +52,8 @@
     </article>`;
   }
 
+  UI.reviewItem = reviewItem;
+
   UI.views.results = function (p) {
     const last = p.last || O.Progress.last();
     if (!last) { UI.go('home'); return; }

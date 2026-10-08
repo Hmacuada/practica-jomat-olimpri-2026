@@ -56,9 +56,9 @@
   UI.go = (name, params) => {
     if (UI.leave) { try { UI.leave(); } catch (e) { /* nada */ } UI.leave = null; }
     UI.handlers = {};
-    document.body.classList.toggle('in-exam', name === 'exam');
+    document.body.classList.toggle('in-exam', name === 'exam' || name === 'sprintrun');
     UI.$$('.navbtn').forEach(b => b.removeAttribute('aria-current'));
-    const nb = UI.$(`.navbtn[data-nav="${name === 'results' ? 'home' : name}"]`);
+    const nb = UI.$(`.navbtn[data-nav="${name === 'results' ? 'home' : name.startsWith('sprint') ? 'sprint' : name}"]`);
     if (nb) nb.setAttribute('aria-current', 'page');
     UI.state.view = name;
     UI.views[name](params || {});

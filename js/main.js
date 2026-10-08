@@ -24,6 +24,13 @@
       UI.go('exam');
       return;
     }
+    const sp = O.Progress.sprint();
+    if (sp && sp.cfg) {
+      if (Date.now() >= sp.endAt) { UI.finishSprint(); return; }
+      UI.go('sprintrun');
+      return;
+    }
+    if (O.Progress.view() === 'sprintresult' && O.Progress.lastSprint()) { UI.go('sprintresult', {}); return; }
     if (O.Progress.view() === 'results' && O.Progress.last()) { UI.go('results', { fromStorage: true }); return; }
     UI.go('home');
   }

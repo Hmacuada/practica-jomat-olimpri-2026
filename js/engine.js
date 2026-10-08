@@ -158,6 +158,46 @@
     });
   };
 
+  /** Plan de la práctica contra reloj: una larga lista de preguntas (alternativas y abiertas, sin desarrollo),
+      sin repetir el mismo generador seguidamente. Depende solo de la semilla, así que se puede retomar. */
+  O.planSprint = function (seed, topic, diff, n = 300) {
+    const r = new O.RNG(seed + ':sprint'), ids = O.TOPICS.map(t => t.id);
+    let seq = [];
+    if (topic === 'all') {
+      while (seq.length < n) {
+        const t = r.shuffle(ids);
+        if (seq.length && t[0] === seq[seq.length - 1]) t.push(t.shift());
+        seq = seq.concat(t);
+      }
+      seq = seq.slice(0, n);
+    } else seq = new Array(n).fill(topic);
+    const used = {}; let last = null;
+    return seq.map((tp, i) => {
+      const type = r.chance(0.5) ? 'mc' : 'open';
+      const cand = usable(tp, type);
+      let pool = cand.filter(g => g.id !== last);
+      if (!pool.length) pool = cand;
+      const min = Math.min(...pool.map(g => used[g.id] || 0));
+      const g = r.pick(pool.filter(x => (used[x.id] || 0) === min));
+      used[g.id] = (used[g.id] || 0) + 1; last = g.id;
+      return { i, type, topic: tp, gen: g.id, d: diff };
+    });
+  };
+
+  /** Resumen de una sesión contra reloj. log: [{topic, ok: true|false|null (saltada), ms}] */
+  O.sprintSummary = function (log) {
+    let answered = 0, correct = 0, skipped = 0, streak = 0, best = 0, ms = 0;
+    const byTopic = {};
+    log.forEach(e => {
+      if (e.ok === null) { skipped++; streak = 0; return; }
+      answered++; ms += e.ms || 0;
+      const b = byTopic[e.topic] || (byTopic[e.topic] = { ok: 0, total: 0 });
+      b.total++;
+      if (e.ok) { correct++; streak++; best = Math.max(best, streak); b.ok++; } else streak = 0;
+    });
+    return { answered, correct, skipped, pct: answered ? correct / answered * 100 : 0, avgSec: answered ? ms / answered / 1000 : 0, bestStreak: best, currentStreak: streak, byTopic };
+  };
+
   O.buildAll = function (seed, stage, diff) {
     return O.planExam(seed, stage, diff).map(item => O.buildQuestion(seed, item));
   };

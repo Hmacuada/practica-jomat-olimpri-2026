@@ -71,6 +71,19 @@
     saveLast: x => Store.set('last', x),
     view: () => Store.get('view', 'home'),
     saveView: v => Store.set('view', v),
-    resetAll() { ['best', 'history', 'active', 'last', 'view'].forEach(k => Store.remove(k)); }
+    sprint: () => Store.get('sprint', null),
+    saveSprint: x => Store.set('sprint', x),
+    clearSprint: () => Store.remove('sprint'),
+    lastSprint: () => Store.get('lastsprint', null),
+    saveLastSprint: x => Store.set('lastsprint', x),
+    sprintBest: () => Store.get('sprintbest', {}),
+    /** Guarda el récord de una configuración (tema|dificultad|minutos). Devuelve si se superó el anterior. */
+    recordSprint(key, sum) {
+      const best = Store.get('sprintbest', {}), prev = best[key] || null;
+      const isRecord = sum.correct > 0 && (!prev || sum.correct > prev.correct);
+      if (isRecord) { best[key] = { correct: sum.correct, answered: sum.answered, pct: sum.pct, ts: Date.now() }; Store.set('sprintbest', best); }
+      return { isRecord, prev };
+    },
+    resetAll() { ['best', 'history', 'active', 'last', 'view', 'sprint', 'lastsprint', 'sprintbest'].forEach(k => Store.remove(k)); }
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

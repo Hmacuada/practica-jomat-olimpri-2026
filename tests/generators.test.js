@@ -251,6 +251,38 @@ console.log(`  ${exams} simulacros generados y verificados.`);
   console.log('  Corrector de respuestas abiertas: verificado.');
 }
 
+// ---------- Práctica contra reloj ----------
+console.log('Práctica contra reloj:');
+{
+  let built = 0;
+  for (const topic of ['all', ...O.TOPICS.map(t => t.id)]) {
+    for (const d of [1, 2, 3]) {
+      const seed = `SP-${topic}-${d}`, plan = O.planSprint(seed, topic, d, 300);
+      if (plan.length !== 300) bad(`sprint ${topic}/d${d}: el plan no tiene 300 preguntas`);
+      const again = O.planSprint(seed, topic, d, 300);
+      if (again.some((it, i) => it.gen !== plan[i].gen || it.type !== plan[i].type)) bad(`sprint ${topic}/d${d}: el plan no es reproducible`);
+      if (O.planSprint(seed + 'x', topic, d, 300).every((it, i) => it.gen === plan[i].gen && it.type === plan[i].type)) bad(`sprint ${topic}/d${d}: semillas distintas dieron el mismo plan`);
+      for (let i = 0; i < plan.length; i++) {
+        if (i && plan[i].gen === plan[i - 1].gen) bad(`sprint ${topic}/d${d}: mismo generador seguido en ${i}`);
+        if (plan[i].type === 'dev') bad(`sprint ${topic}/d${d}: aparece un problema de desarrollo`);
+        if (topic !== 'all' && plan[i].topic !== topic) bad(`sprint ${topic}/d${d}: tema equivocado en ${i}`);
+        if (plan[i].d !== d) bad(`sprint ${topic}/d${d}: dificultad equivocada`);
+      }
+      if (topic === 'all') { const firstRound = new Set(plan.slice(0, O.TOPICS.length).map(it => it.topic)); if (firstRound.size !== O.TOPICS.length) bad(`sprint all/d${d}: la primera vuelta no cubre los ${O.TOPICS.length} temas`); }
+      for (let i = 0; i < 60; i++) {
+        let q; try { q = O.buildQuestion(seed, plan[i]); } catch (e) { bad(`sprint ${topic}/d${d} #${i}: ${e.message}`); continue; }
+        checkQuestion(q, O.GENS.find(x => x.id === plan[i].gen), plan[i].type, d, seed);
+        built++;
+      }
+    }
+  }
+  const s = O.sprintSummary([{ topic: 'a', ok: true, ms: 2000 }, { topic: 'a', ok: true, ms: 4000 }, { topic: 'b', ok: false, ms: 3000 }, { topic: 'b', ok: null }, { topic: 'a', ok: true, ms: 1000 }]);
+  if (s.answered !== 4 || s.correct !== 3 || s.skipped !== 1 || s.bestStreak !== 2 || s.currentStreak !== 1 || Math.abs(s.avgSec - 2.5) > 1e-9 || Math.abs(s.pct - 75) > 1e-9 || s.byTopic.a.ok !== 3 || s.byTopic.b.total !== 1) bad('sprintSummary: resultado inesperado ' + JSON.stringify(s));
+  const e = O.sprintSummary([]);
+  if (e.answered !== 0 || e.pct !== 0 || e.avgSec !== 0) bad('sprintSummary: sesión vacía');
+  console.log(`  ${12 * 3} planes (12 temas × 3 dificultades) verificados, ${built} preguntas construidas; resumen: verificado.\n`);
+}
+
 console.log(`\n${checks} preguntas verificadas.`);
 if (errors) { console.log(`\n✗ ${errors} problema(s) encontrados.`); process.exit(1); }
 console.log('✓ Todo en orden.');
