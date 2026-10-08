@@ -71,26 +71,25 @@
     const fact = FACTS[Math.floor(Math.random() * FACTS.length)];
     UI.setMain(`
       <div class="welcome">
-        <div class="wl-left">
-          <div class="wl-art">${coverSvg()}</div>
-          <div class="wl-copy">
-            <span class="chip">Olimpiadas de matemática · 6° básico</span>
-            <h1 class="wl-title">JOMAT OLIMPRI <span>2026</span></h1>
-            <p class="wl-sub">El camino a la Gran Final empieza aquí.</p>
-            <ol class="wl-steps" aria-label="Las tres etapas">
-              <li><b>1</b>Clasificatoria</li><li><b>2</b>Semifinal</li><li><b>3</b>Gran Final</li>
-            </ol>
-            <div class="wl-colors"><span id="wlcolorlbl">Elige tu verde favorito:</span><div class="swatches" role="radiogroup" aria-labelledby="wlcolorlbl" data-swatches></div></div>
-            <p class="wl-fact"><strong>¿Sabías que…?</strong> ${esc(fact)}</p>
-          </div>
+        <div class="wl-art">${coverSvg()}</div>
+        <div class="wl-extra">
+          <ol class="wl-steps" aria-label="Las tres etapas">
+            <li><b>1</b>Clasificatoria</li><li><b>2</b>Semifinal</li><li><b>3</b>Gran Final</li>
+          </ol>
+          <p class="wl-fact"><strong>¿Sabías que…?</strong> ${esc(fact)}</p>
         </div>
-        <div class="wl-right">
-          <section class="card wl-card" aria-labelledby="wlTitle">
-            ${hasProfiles ? `<h2 id="wlTitle">¿Quién va a practicar hoy?</h2>${profilesHtml(current)}
+        <section class="card wl-card" aria-labelledby="wlTitle">
+          <div class="wl-head">
+            <span class="chip">Olimpiadas de matemática · 6° básico</span>
+            <h1 class="wl-title" id="wlTitle">JOMAT OLIMPRI <span>2026</span></h1>
+            <p class="wl-sub">El camino a la Gran Final empieza aquí.</p>
+          </div>
+          <div class="wl-form">
+            ${hasProfiles ? `<h2 class="wl-h2">¿Quién va a practicar hoy?</h2>${profilesHtml(current)}
               <div class="wl-or"><span>¿No estás en la lista?</span></div>
               <label class="field" for="wlName">Soy nuevo, mi nombre es
                 <input id="wlName" type="text" maxlength="24" autocomplete="given-name" autocapitalize="words" spellcheck="false" placeholder="Escribe tu nombre" data-enter="wl-enter"></label>`
-        : `<h2 id="wlTitle">¡Bienvenido! ¿Cómo te llamas?</h2>
+        : `<h2 class="wl-h2">¡Bienvenido! ¿Cómo te llamas?</h2>
               <p class="muted">Escribe tu nombre para registrarte. La página te saludará y guardará tu avance.</p>
               <label class="field" for="wlName">Tu nombre
                 <input id="wlName" type="text" maxlength="24" autocomplete="given-name" autocapitalize="words" spellcheck="false" placeholder="Por ejemplo: Tiziano" data-enter="wl-enter"></label>`}
@@ -98,11 +97,10 @@
             <div class="btn-row"><button class="btn primary big" type="button" data-act="wl-enter">${hasProfiles ? 'Registrarme y entrar' : 'Entrar y empezar'}</button>
               ${current ? `<button class="btn ghost" type="button" data-act="wl-back">← Seguir como ${esc(current.name)}</button>` : ''}</div>
             <p class="hint">Tu nombre y tu avance se guardan solo en este navegador. No hace falta contraseña.</p>
-          </section>
-        </div>
+          </div>
+        </section>
       </div>`);
 
-    UI.renderSwatches();
     const H = UI.handlers;
     H['wl-enter'] = () => {
       const inp = UI.$('#wlName'), err = UI.$('#wlErr');
