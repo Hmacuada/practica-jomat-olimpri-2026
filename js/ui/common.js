@@ -115,7 +115,7 @@
   };
 
   /* ---------- Usuario actual: iniciales y color del avatar ---------- */
-  const AVATAR_COLORS = ['#b4481a', '#1f6f8b', '#6a4c93', '#2e7d32', '#a23b72', '#8a5a00'];
+  const AVATAR_COLORS = ['#0d7048', '#1f6f8b', '#6a4c93', '#a23b72', '#8a5a00', '#b4481a'];
   UI.initial = name => (String(name).trim()[0] || '?').toLocaleUpperCase('es');
   UI.avatarColor = name => { let h = 0; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVATAR_COLORS[h % AVATAR_COLORS.length]; };
   UI.avatarHtml = (name, cls) => `<span class="avatar ${cls || ''}" style="background:${UI.avatarColor(name)}" aria-hidden="true">${U.esc(UI.initial(name))}</span>`;
