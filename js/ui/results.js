@@ -61,13 +61,14 @@
     const lv = O.levelByKey(last.key), idx = O.LEVELS.indexOf(lv), next = O.LEVELS[idx + 1];
     const { qs, g } = UI.recordLast(last);   // vuelve a corregir (y mantiene historial al día)
     const pctTxt = Math.round(g.pct);
+    const nm = O.Users.current() ? ', ' + esc(O.Users.current().name) : '';
 
     let msg;
-    if (g.pass && next) msg = `<div class="callout ok"><strong>¡Muy bien!</strong> Superaste el ${O.PASS} %. Se abrió el nivel <strong>${esc(UI.levelName(next.key))}</strong>.</div>`;
-    else if (g.pass) msg = `<div class="callout ok"><strong>¡Increíble!</strong> Superaste el ${O.PASS} % en el último nivel. Ya completaste todo el camino. ¡Sigue practicando para la olimpiada!</div>`;
+    if (g.pass && next) msg = `<div class="callout ok"><strong>¡Muy bien${nm}!</strong> Superaste el ${O.PASS} %. Se abrió el nivel <strong>${esc(UI.levelName(next.key))}</strong>.</div>`;
+    else if (g.pass) msg = `<div class="callout ok"><strong>¡Increíble${nm}!</strong> Superaste el ${O.PASS} % en el último nivel. Ya completaste todo el camino. ¡Sigue practicando para la olimpiada!</div>`;
     else {
       const need = Math.ceil((O.PASS / 100 * g.total - g.points) * 2) / 2;
-      msg = `<div class="callout warn"><strong>Casi.</strong> Te faltaron ${pts(need)} punto${need === 1 ? '' : 's'} para llegar al ${O.PASS} %. Revisa abajo cómo se resuelve cada pregunta e inténtalo de nuevo con preguntas nuevas.</div>`;
+      msg = `<div class="callout warn"><strong>Casi${nm}.</strong> Te faltaron ${pts(need)} punto${need === 1 ? '' : 's'} para llegar al ${O.PASS} %. Revisa abajo cómo se resuelve cada pregunta e inténtalo de nuevo con preguntas nuevas.</div>`;
     }
     const pend = g.pending ? `<div class="callout warn" style="margin-top:10px"><strong>Te falta autoevaluar ${g.pending} problema${g.pending > 1 ? 's' : ''} de desarrollo.</strong> Mira la solución en la revisión y elige «Lo logré», «Casi» o «No lo logré». Tu puntaje se actualiza al instante.</div>` : '';
     const auto = last.auto ? '<p class="callout warn" style="margin-bottom:12px">Se acabó el tiempo, así que la prueba se entregó sola.</p>' : '';

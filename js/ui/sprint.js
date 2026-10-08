@@ -253,8 +253,9 @@
     O.Progress.saveView('sprintresult');
     const sum = O.sprintSummary(res.log), pl = O.planSprint(res.seed, res.cfg.topic, res.cfg.diff);
     const rec = res.record || {};
+    const nm = O.Users.current() ? ', ' + esc(O.Users.current().name) : '';
     const msg = rec.isRecord
-      ? `<div class="callout ok"><strong>¡Nueva mejor marca!</strong> ${sum.correct} correctas${rec.prev ? ` (la marca anterior era ${rec.prev.correct})` : ''}.</div>`
+      ? `<div class="callout ok"><strong>¡Nueva mejor marca${nm}!</strong> ${sum.correct} correctas${rec.prev ? ` (la marca anterior era ${rec.prev.correct})` : ''}.</div>`
       : sum.answered === 0 ? '<div class="callout warn">No se respondió ninguna pregunta en esta sesión.</div>'
         : rec.prev ? `<div class="callout">La mejor marca con esta configuración es de <strong>${rec.prev.correct} correctas</strong>. Esta vez fueron ${sum.correct}.</div>` : '';
     const topics = O.TOPICS.filter(t => sum.byTopic[t.id]).map(t => ({ t, ...sum.byTopic[t.id], pct: sum.byTopic[t.id].ok / sum.byTopic[t.id].total * 100 })).sort((a, b) => b.pct - a.pct);

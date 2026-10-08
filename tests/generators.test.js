@@ -162,6 +162,11 @@ console.log('Verificación independiente (se recalcula la respuesta desde el enu
       const p = { 'decena': 10, 'centena': 100, 'unidad de mil': 1000, 'decena de mil': 10000, 'centena de mil': 100000 }[m[2]];
       return Math.round(+nums(m[1]) / p) * p;
     },
+    'num.reparto_resto': q => {
+      const m = q.text.match(/Se tienen ([\d.]+) .*?(?:con|caben) (\d+)(?: en cada \S+)?\. ¿Cuánt\S+ (.+)\?/); if (!m) return null;
+      const n = +nums(m[1]), k = +m[2];
+      return /sobran/.test(m[3]) ? n % k : /llenan/.test(m[3]) ? Math.floor(n / k) : /necesitan/.test(m[3]) ? Math.ceil(n / k) : null;
+    },
     'div.divisibilidad': q => {
       const m = q.text.match(/divisible por (\d+)\?/); if (!m) return null; const k = +m[1];
       const opts = q.options.map(o => +nums(o)), ok = opts.filter(v => v % k === 0);

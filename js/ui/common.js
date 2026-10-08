@@ -54,9 +54,14 @@
 
   /** Cambia de vista. Cada vista se define en UI.views[nombre](params). */
   UI.go = (name, params) => {
+    // Sin usuario solo se puede ver la bienvenida; la administración exige sesión de administrador
+    if (name === 'admin') { if (!UI.adminActive || !UI.adminActive()) name = O.Users.current() ? 'home' : 'welcome'; }
+    else if (name !== 'welcome' && !O.Users.current()) name = 'welcome';
     if (UI.leave) { try { UI.leave(); } catch (e) { /* nada */ } UI.leave = null; }
     UI.handlers = {};
     document.body.classList.toggle('in-exam', name === 'exam' || name === 'sprintrun');
+    document.body.classList.toggle('in-welcome', name === 'welcome');
+    UI.renderUser();
     UI.$$('.navbtn').forEach(b => b.removeAttribute('aria-current'));
     const nb = UI.$(`.navbtn[data-nav="${name === 'results' ? 'home' : name.startsWith('sprint') ? 'sprint' : name}"]`);
     if (nb) nb.setAttribute('aria-current', 'page');
@@ -88,15 +93,40 @@
         else if (!modal.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
       }
     }
+    const api = { close, el: modal };
     (opts.actions || [{ label: 'Cerrar' }]).forEach((a, i) => {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'btn ' + (a.cls || ''); b.textContent = a.label;
-      b.addEventListener('click', () => { close(); if (a.onClick) a.onClick(); });
+      if (a.primary) b.dataset.primary = '1';
+      b.addEventListener('click', () => {
+        if (a.keepOpen) { if (a.onClick) a.onClick(api); return; }
+        close(); if (a.onClick) a.onClick(api);
+      });
       act.appendChild(b);
       if (a.focus || (i === 0 && !(opts.actions || []).some(x => x.focus))) setTimeout(() => b.focus(), 0);
     });
     document.addEventListener('keydown', onKey, true);
-    if (opts.onOpen) opts.onOpen(modal);
-    return { close };
+    // Enter dentro de un campo del modal activa el botón principal
+    modal.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && e.target.tagName === 'INPUT') { const p = UI.$('[data-primary]', modal); if (p) { e.preventDefault(); p.click(); } }
+    });
+    if (opts.onOpen) opts.onOpen(modal, api);
+    return api;
+  };
+
+  /* ---------- Usuario actual: iniciales y color del avatar ---------- */
+  const AVATAR_COLORS = ['#b4481a', '#1f6f8b', '#6a4c93', '#2e7d32', '#a23b72', '#8a5a00'];
+  UI.initial = name => (String(name).trim()[0] || '?').toLocaleUpperCase('es');
+  UI.avatarColor = name => { let h = 0; for (const c of String(name)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return AVATAR_COLORS[h % AVATAR_COLORS.length]; };
+  UI.avatarHtml = (name, cls) => `<span class="avatar ${cls || ''}" style="background:${UI.avatarColor(name)}" aria-hidden="true">${U.esc(UI.initial(name))}</span>`;
+  /** Muestra u oculta el nombre del usuario en el encabezado. */
+  UI.renderUser = () => {
+    const p = O.Users.current(), box = UI.$('#userbox');
+    if (!box) return;
+    box.hidden = !p;
+    if (!p) return;
+    const av = UI.$('#uAvatar');
+    av.textContent = UI.initial(p.name); av.style.background = UI.avatarColor(p.name);
+    UI.$('#uName').textContent = p.name;
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

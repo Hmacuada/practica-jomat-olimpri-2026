@@ -37,11 +37,14 @@
         <td class="num"><strong>${h.points % 1 ? String(h.points).replace('.', ',') : h.points}/${h.total}</strong> · ${UI.pct(h.pct)} ${h.pass ? '<span class="chip ok">Superado</span>' : ''}</td><td class="num muted">${esc(h.seed)}</td></tr>`; }).join('')}
       </tbody></table></div>` : '<p class="muted">Todavía no hay intentos. ¡Empieza por la Clasificatoria · Fácil!</p>';
 
+    const me = O.Users.current(), greet = UI.state.greet;
+    const hello = !me ? '¡Hola!' : greet === 'new' ? `¡Bienvenido, ${me.name}!` : greet === 'back' ? `¡Hola de nuevo, ${me.name}!` : `¡Hola, ${me.name}!`;
+    UI.state.greet = 'hola';
     const passedCount = O.LEVELS.filter(l => best[l.key] && best[l.key].pass).length;
     UI.setMain(`
       <section class="hero">
-        <h1>¡Vamos a practicar para la olimpiada!</h1>
-        <p>Cada simulacro tiene preguntas nuevas, como en la prueba real. Para abrir el siguiente nivel necesitas al menos <strong>${O.PASS} %</strong> de puntaje.</p>
+        <h1>${esc(hello)}</h1>
+        <p>¡Vamos a practicar para la olimpiada! Cada simulacro tiene preguntas nuevas, como en la prueba real. Para abrir el siguiente nivel necesitas al menos <strong>${O.PASS} %</strong> de puntaje.</p>
       </section>
       <section aria-labelledby="mapTitle">
         <h2 id="mapTitle">Tu camino a la Gran Final <span class="chip">${passedCount} de ${O.LEVELS.length} niveles superados</span></h2>
@@ -68,19 +71,5 @@
     UI.handlers.practice = () => UI.go('practice');
     UI.handlers.sprint = () => UI.go('sprint');
     UI.handlers.showlast = () => UI.go('results', { fromStorage: true });
-  };
-
-  /* Opciones para adultos */
-  UI.adultOptions = function () {
-    UI.modal({
-      title: 'Opciones para adultos',
-      html: `<p>Estas acciones cambian el avance guardado en este navegador.</p>
-        <p class="hint">Los datos se guardan solo en este navegador y no se envían a ningún lugar.</p>`,
-      actions: [
-        { label: 'Cerrar', cls: 'ghost', focus: true },
-        { label: 'Desbloquear todos los niveles', onClick: () => UI.modal({ title: '¿Desbloquear todo?', html: '<p>Se abrirán los 9 niveles, incluso los que no se han superado.</p>', actions: [{ label: 'Cancelar', cls: 'ghost', focus: true }, { label: 'Sí, desbloquear', cls: 'primary', onClick: () => { O.Progress.unlockAll(); UI.go('home'); } }] }) },
-        { label: 'Borrar todo el avance', cls: 'danger', onClick: () => UI.modal({ title: '¿Borrar todo el avance?', html: '<p>Se borrarán el progreso, el historial y cualquier prueba en curso. No se puede deshacer.</p>', actions: [{ label: 'Cancelar', cls: 'ghost', focus: true }, { label: 'Sí, borrar', cls: 'danger', onClick: () => { O.Progress.resetAll(); UI.go('home'); } }] }) }
-      ]
-    });
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

@@ -23,6 +23,11 @@
         <button class="navbtn" data-nav="practice" type="button">Práctica libre</button>
         <button class="navbtn" data-nav="sprint" type="button">Contra reloj</button>
       </nav>
+      <div class="userbox" id="userbox" hidden>
+        <span class="avatar" id="uAvatar" aria-hidden="true"></span>
+        <span class="uname"><span class="sr-only">Usuario: </span><span id="uName"></span></span>
+        <button class="linkbtn userswitch" data-nav="switch" type="button">Cambiar usuario</button>
+      </div>
     </div>
   </header>
 
@@ -30,7 +35,6 @@
 
   <footer class="foot" id="foot">
     <p>Matemática de 5° y 6° básico · Hecha para practicar en casa. Las preguntas se generan con el computador y cambian en cada intento. Proyecto personal, no oficial: no está afiliado a la organización de las olimpiadas.</p>
-    <p><button class="linkbtn" data-nav="adult" type="button">Opciones para adultos</button></p>
   </footer>
 
   <div id="modal-root"></div>
@@ -54,12 +58,15 @@
   <script src="js/gen/dat.js"></script>
   <script src="js/gen/log.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/admin.js"></script>
   <script src="js/ui/common.js"></script>
   <script src="js/ui/home.js"></script>
   <script src="js/ui/exam.js"></script>
   <script src="js/ui/results.js"></script>
   <script src="js/ui/practice.js"></script>
   <script src="js/ui/sprint.js"></script>
+  <script src="js/ui/welcome.js"></script>
+  <script src="js/ui/admin.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>

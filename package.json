@@ -6,6 +6,6 @@
   "license": "MIT",
   "scripts": {
     "start": "node tools/serve.js",
-    "test": "node tests/generators.test.js"
+    "test": "node tests/generators.test.js && node tests/users.test.js"
   }
 }
