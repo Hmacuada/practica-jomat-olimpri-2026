@@ -8,7 +8,9 @@ Todo funciona en el navegador: HTML + CSS + JavaScript puro, sin frameworks, sin
 
 ## Cómo abrirla
 
-**Opción 1 (la más simple):** haz doble clic en `index.html`.
+**En línea (sin instalar nada):** https://hmacuada.github.io/practica-jomat-olimpri-2026/
+
+**Opción 1 (sin conexión):** haz doble clic en `index.html`.
 
 **Opción 2 (servidor local, opcional):**
 
