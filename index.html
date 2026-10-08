@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Práctica JOMAT OLIMPRI 2026 · 6° básico</title>
+  <meta name="description" content="Práctica de matemática para las olimpiadas JOMAT OLIMPRI 2026, categoría 6° básico: simulacros de Clasificatoria, Semifinal y Gran Final con preguntas que cambian cada vez.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23b4481a'/%3E%3Ctext x='32' y='45' font-size='38' font-family='Georgia,serif' font-weight='700' text-anchor='middle' fill='white'%3E%CF%80%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Saltar al contenido</a>
+
+  <header class="topbar" id="topbar">
+    <div class="topbar-in">
+      <a class="brand" href="#" id="brand" aria-label="Ir al inicio">
+        <span class="brand-mark" aria-hidden="true">π</span>
+        <span class="brand-text"><strong>JOMAT OLIMPRI 2026</strong><small>Práctica · 6° básico</small></span>
+      </a>
+      <nav class="topnav" id="topnav" aria-label="Principal">
+        <button class="navbtn" data-nav="home" type="button">Inicio</button>
+        <button class="navbtn" data-nav="practice" type="button">Práctica libre</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1"></main>
+
+  <footer class="foot" id="foot">
+    <p>Matemática de 5° y 6° básico · Hecha para practicar en casa. Las preguntas se generan con el computador y cambian en cada intento. Proyecto personal, no oficial: no está afiliado a la organización de las olimpiadas.</p>
+    <p><button class="linkbtn" data-nav="adult" type="button">Opciones para adultos</button></p>
+  </footer>
+
+  <div id="modal-root"></div>
+  <div class="sr-only" id="live" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript><p class="noscript">Esta página necesita JavaScript para funcionar. Actívalo en tu navegador y recarga.</p></noscript>
+
+  <!-- Código separado por responsabilidad: azar con semilla → utilidades → motor → generadores → almacenamiento → interfaz -->
+  <script src="js/rng.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/gen/num.js"></script>
+  <script src="js/gen/div.js"></script>
+  <script src="js/gen/fra.js"></script>
+  <script src="js/gen/dec.js"></script>
+  <script src="js/gen/raz.js"></script>
+  <script src="js/gen/pat.js"></script>
+  <script src="js/gen/geo.js"></script>
+  <script src="js/gen/ang.js"></script>
+  <script src="js/gen/cart.js"></script>
+  <script src="js/gen/dat.js"></script>
+  <script src="js/gen/log.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui/common.js"></script>
+  <script src="js/ui/home.js"></script>
+  <script src="js/ui/exam.js"></script>
+  <script src="js/ui/results.js"></script>
+  <script src="js/ui/practice.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
